@@ -30,9 +30,10 @@ String name="";
 @override
   void initState() {
     print("inittt");
-    connectIO();
+  //  connectIO();
     getUsers();
     super.initState();
+    getName();
   }
 
    void getUsers()async{
@@ -48,12 +49,13 @@ String name="";
    
   }
 
- Future<String>  getName()async{
+void  getName()async{
   SharedPreferences preferences=await SharedPreferences.getInstance();
-  return preferences.getString("name");
+  print("heyy"+preferences.getString("ID"));
+ 
 }
 
-void connectIO(){
+/*void connectIO(){
 
 setState(() {
    getName().then((value) => name=value);
@@ -83,7 +85,7 @@ setState(() {
       onlineUsers.setUsers(body['name'], body['id'], true);
       print("Helllooo");
      });*/
-}
+}*/
 void disconnectUser(String username,String id)async{
  await api.disconnectUser(username, id).then((value) => {
    if(value.statusCode==200){

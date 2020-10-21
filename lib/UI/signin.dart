@@ -1,6 +1,7 @@
 import 'package:chat_app/UI/chat_page.dart';
 import 'package:chat_app/UI/main_page.dart';
 import 'package:chat_app/UI/select_private.dart';
+import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,19 @@ class Signin extends StatefulWidget {
 
 
 class _MySigninState extends State<Signin> {
+SocketConnect socketConnect;
+void connectSocket(){
+  SocketConnect.connect();
+}
+
+@override
+void initState() { 
+  super.initState();
+  connectSocket();
+  
+}
+  
+
 
   TextEditingController textEditingController=new TextEditingController();
   GlobalKey<ScaffoldState>_globalKey=new GlobalKey<ScaffoldState>();
@@ -41,7 +55,9 @@ Widget build(BuildContext context) {
               onPressed: ()async{
                 SharedPreferences preferences=await SharedPreferences.getInstance();
                 preferences.setString("name", textEditingController.text.toString());
-                
+                 socketConnect=new SocketConnect();
+                socketConnect.emitUserSignup(textEditingController.text.toString());
+             
                /* api.checkUser(textEditingController.text.toString()).then((value) => {
                   if(value.statusCode==409){
                     print("user already exits"),
