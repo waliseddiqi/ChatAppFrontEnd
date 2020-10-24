@@ -1,3 +1,4 @@
+import 'package:chat_app/UI/email_verification.dart';
 import 'package:flutter/material.dart';
 
 import 'UI/Signin.dart';
@@ -40,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
      
-      body: Signin()
+      body: MailVerfication()
  
     );
   }

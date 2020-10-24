@@ -20,7 +20,13 @@ Future<http.Response> getUsers ()async{
 return await http.get(Uri.encodeFull(url),headers: headers);
 }
 
+Future<http.Response> sendEmail(String email)async{
+var url="http://192.168.137.1:5000/sendEmail/";
+Map<String,String> headers = {'Accept': 'application/json',"Content-type": "application/json"};
+  var body={"email":email,};
+return await http.post(Uri.encodeFull(url),body: jsonEncode(body),headers: headers);
 
+}
 
 
 
