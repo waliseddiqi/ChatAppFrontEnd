@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
     return StreamProvider(
       create: (context) => ConnectivityService().connectionStatusController.stream,
           child: MaterialApp(
+            debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
 
