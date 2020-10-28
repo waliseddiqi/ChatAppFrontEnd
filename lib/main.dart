@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'UI/Signin.dart';
+import 'UI/email_verification.dart';
 import 'core/connectivity_model.dart';
 
 void main() {
@@ -45,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
      
-      body: Signin()
+      body: MailVerfication()
  
     );
   }
