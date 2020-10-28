@@ -56,7 +56,7 @@ Widget build(BuildContext context) {
                 SharedPreferences preferences=await SharedPreferences.getInstance();
                 preferences.setString("name", textEditingController.text.toString());
                  socketConnect=new SocketConnect();
-                socketConnect.emitUserSignup(textEditingController.text.toString());
+                //socketConnect.emitUserSignup(textEditingController.text.toString());
              
                /* api.checkUser(textEditingController.text.toString()).then((value) => {
                   if(value.statusCode==409){
