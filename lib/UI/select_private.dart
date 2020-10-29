@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:chat_app/UI/signin.dart';
+
 import 'package:chat_app/models/messages.dart';
 import 'package:chat_app/models/onlineUsers.dart';
 import 'package:chat_app/models/online_users.dart';
@@ -29,7 +29,7 @@ String id="";
 String name="";
 @override
   void initState() {
-    print("inittt");
+  
   //  connectIO();
     getUsers();
     super.initState();
@@ -89,7 +89,7 @@ setState(() {
 void disconnectUser(String username,String id)async{
  await api.disconnectUser(username, id).then((value) => {
    if(value.statusCode==200){
-   Navigator.push(context, MaterialPageRoute(builder: (context)=>Signin())),
+   //Navigator.push(context, MaterialPageRoute(builder: (context)=>Signin())),
    }else{
      print(value.body)
    }

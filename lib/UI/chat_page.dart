@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:chat_app/UI/Messages.dart';
 import 'package:chat_app/UI/select_private.dart';
-import 'package:chat_app/UI/signin.dart';
+
 import 'package:chat_app/models/messages.dart';
 import 'package:chat_app/models/online_users.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +39,7 @@ Widget build(BuildContext context) {
                   RaisedButton(
                   child: Text("Log out"),
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Signin()));
+                  //  Navigator.push(context, MaterialPageRoute(builder: (context)=>Signin()));
                 }),
            
               ],

@@ -1,9 +1,13 @@
+import 'package:chat_app/UI/offline_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'UI/Signin.dart';
+
+import 'UI/email_confirmation.dart';
 import 'UI/email_verification.dart';
+import 'UI/user_signup_page.dart';
 import 'core/connectivity_model.dart';
+import 'core/enums.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,6 +20,9 @@ class MyApp extends StatelessWidget {
     return StreamProvider(
       create: (context) => ConnectivityService().connectionStatusController.stream,
           child: MaterialApp(
+            routes: {
+               '/emailConfirmation': (context) => EmailConfirmation(),
+            },
             debugShowCheckedModeBanner: false,
         title: 'Flutter App',
         theme: ThemeData(
@@ -39,14 +46,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+PageController pageController= new PageController();
 
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
+     var connectionStatus = Provider.of<ConnectivityStatus>(context);
+   return connectionStatus == ConnectivityStatus.Offline?OfflinePage():
+     Scaffold(
      
-      body: MailVerfication()
+      body:PageView(
+        controller: pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+           MailVerfication(pageController: pageController,),
+           EmailConfirmation(pageController: pageController,),
+           UserSignUpPage()
+        ],
+      )
  
     );
   }

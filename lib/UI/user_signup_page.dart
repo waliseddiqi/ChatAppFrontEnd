@@ -1,9 +1,13 @@
+import 'package:chat_app/UI/chat_main_page.dart';
+import 'package:chat_app/UI/select_private.dart';
 import 'package:chat_app/models/user.dart';
 import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/material.dart';
 
 class UserSignUpPage extends StatefulWidget{
+ 
 
+  const UserSignUpPage({Key key}) : super(key: key);
   @override
   _UserSignUpPageState createState() => _UserSignUpPageState();
 }
@@ -182,7 +186,10 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
           color: Colors.blueAccent,
           child: Text("Sign up",style:TextStyle(color: Colors.white) ,),
           onPressed: (){
-            _validateAndSubmit();
+         //   _validateAndSubmit();
+          /// //then navigate
+          /// 
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMainPage()));
                 
                   }),
                 )
