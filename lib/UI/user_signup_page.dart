@@ -186,7 +186,7 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
           color: Colors.blueAccent,
           child: Text("Sign up",style:TextStyle(color: Colors.white) ,),
           onPressed: (){
-         //   _validateAndSubmit();
+            _validateAndSubmit();
           /// //then navigate
           /// 
           Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMainPage()));

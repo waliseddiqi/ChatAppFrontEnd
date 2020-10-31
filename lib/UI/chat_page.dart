@@ -187,8 +187,8 @@ Widget build(BuildContext context) {
                Container(
                 height: size.height*0.1,
                        child: Row(
-                                                   children: [
-                                                     Container(
+              children: [
+                Container(
                   
                    height: size.height*0.1,
                    width: size.width*0.85,

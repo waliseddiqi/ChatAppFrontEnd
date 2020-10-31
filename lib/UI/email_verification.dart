@@ -66,13 +66,14 @@ class _MailVerficationState extends State<MailVerfication> {
                   onPressed: (){
                   /*api.sendEmail(emailfield.text.toString()).then((value) => {
                     if(value.statusCode==200){
-                        
+                      
+                     //   Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailConfirmation()))
                     }
-
+                            
                   });*/
-                
-                //Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailConfirmation()));
                  widget.pageController.jumpToPage(1);
+                //
+                
                 }),
               )
               

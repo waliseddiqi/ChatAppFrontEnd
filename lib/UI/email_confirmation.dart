@@ -98,19 +98,20 @@ class _EmailConfirmationState extends State<EmailConfirmation> with SingleTicker
                         color: Colors.blueAccent,
                         child: Text("${animation.value<=0?"Re-send":"Continue"}",style:TextStyle(color: Colors.white) ,),
                         onPressed: (){
-                        
+                          widget.pageController.jumpToPage(2);
                           //Navigator.push(context, CupertinoPageRoute(builder: (context)=>UserSignUpPage()));
-                              widget.pageController.jumpToPage(2);
-                        /*if(animation.value==0){
+                             
+                       /* if(animation.value==0){
                        api.sendEmail(widget.email).then((value) => {
                           print(value)
                         });
                         }
                         else{
                          //control verification
-                         api.verifyEmail(codefield.text.toString(), widget.email).then((value){
+                         api.verifyEmail(codefield.text.toString(),"walisediqi3@gmail.com").then((value){
                          if(value.statusCode==200){
                            _globalKey.currentState.showSnackBar(SnackBar(content: Text("Account activated with"+ "${widget.email}")));
+                         
                          }
                          else{
                            _globalKey.currentState.showSnackBar(SnackBar(content: Text("Failed to verify account")));
