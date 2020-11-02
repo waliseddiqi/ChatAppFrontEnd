@@ -16,26 +16,38 @@ class ChatMainPage extends StatefulWidget{
 class _ChatMainPageState extends State<ChatMainPage> {
 
 
-List<OnlineUser> list=new List<OnlineUser>();
+List<OnlineUser> list;
 API api=new API();
 
 
   void getUsers()async{
      
-   await api.getUsers().then((res) => {
+   /*await api.getUsers().then((res) => {
   setState(() {
        list= (json.decode(res.body) as List).map((i) =>
               OnlineUser.fromJson(i)).toList();
       //_isfirst=List.generate(list.length, (index) => true);
       
     }),
-    });
+    });*/
+  
    
   }
   @override
   void initState() {
-    getUsers();
+   // getUsers();
+   list=new List<OnlineUser>();
         super.initState();
+          setState(() {
+       OnlineUser onlineUserfisrt=new OnlineUser();
+    onlineUserfisrt.age="45";
+    onlineUserfisrt.username="Wali";
+    onlineUserfisrt.gender="Male";
+    onlineUserfisrt.id="sdfsf434";
+    onlineUserfisrt.onlineStatus=true;
+    list.add(onlineUserfisrt);
+    });
+   
   }
 
 
@@ -45,24 +57,8 @@ API api=new API();
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor:ColorsPallete.colorg,
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            title: Text("Messages")
-            ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-              title: Text("Settings")
-            ),
-            
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-              title: Text("Account")
-            
-            )
-      ]),
+      backgroundColor:Colors.white,
+    
         body: Center(
           child: Container(
             margin: EdgeInsets.only(top: size.height/45),
@@ -105,10 +101,10 @@ API api=new API();
                                 child: Container(
                                   margin: EdgeInsets.all(size.height/150),
                                  decoration: BoxDecoration(
-                                   color: ColorsPallete.colore,
+                                   color: ColorsPallete.colorf,
                                    borderRadius: BorderRadius.circular(size.height/10)
                                  ),
-                                 child: Center(child: Text("${list[index].username[0]}",style: TextStyle(fontSize: size.height/35),),),
+                                 child: Center(child: Text("${list[index].username[0]}",style: TextStyle(fontSize: size.height/35,color: Colors.white),),),
                                ),
                              ),
                         Container(

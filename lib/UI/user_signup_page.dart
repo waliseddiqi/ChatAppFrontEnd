@@ -4,6 +4,8 @@ import 'package:chat_app/models/user.dart';
 import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/material.dart';
 
+import 'chat_main.dart';
+
 class UserSignUpPage extends StatefulWidget{
  
 
@@ -64,6 +66,16 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
     }
   }
 
+  DateTime _birthdaydate=new DateTime(2010);
+  Future<DateTime> _showDatepicker(){
+    return showDatePicker(
+      context: context, 
+      initialDate: new DateTime(2000), 
+      firstDate: new DateTime(1900), 
+      lastDate: new DateTime(2015));
+  }
+  String _birthday="2000-10-10";
+
   @override
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
@@ -84,44 +96,23 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                    
             child: Text("Registeration",style:TextStyle(fontSize: size.height/25,fontWeight: FontWeight.w600)),),
                    
-          Container(
-             height: size.height/7,
-            margin: EdgeInsets.only(right: size.width/7,top: size.height/15),
-            width: size.width/1.3,
-            child: Column(
-             
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                 Text("Name or Nickname",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
-                SizedBox(height: size.height/110,),
-                TextFormField(
-                  onSaved: ( name)=>user.name=name,
-                  validator: _nameFieldValidator,
-                  decoration: InputDecoration(hintText: "Name or Nickname",
-                 border: new OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.grey)),
-                ),
-                
-                ),
-              ],
-            ),
-          ),
+         
            Container(
              height: size.height/7,
-              margin: EdgeInsets.only(right: size.width/7,top: size.height/15),
-            width: size.width/1.3,
+              margin: EdgeInsets.only(left: size.width/55,top: size.height/20),
+            width: size.width/1.1,
             child: Column(
                crossAxisAlignment: CrossAxisAlignment.start,
              
               children: [
-                Text("Age",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
+                Text("Username",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
                 SizedBox(height: size.height/110,),
                 TextFormField(
                   onSaved: (age) =>user.age=age ,
                   validator: _ageFieldValidator,
-                  decoration: InputDecoration(hintText: "Age",
-                 border: new OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.grey)),
+                  style: TextStyle(fontSize: size.height/42),
+                  decoration: InputDecoration(hintText: "Username",
+                  
                 ),
                 
                 ),
@@ -129,56 +120,102 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
             ),
           ),
            Container(
-              margin: EdgeInsets.only(right: size.width/7,top: size.height/15),
-            width: size.width/1.3,
-            child: Column(
-               crossAxisAlignment: CrossAxisAlignment.start,
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          
+          
+           margin: EdgeInsets.only(left: size.width/20),
+            child: Row(
+          
               children: [
-                 Text("Gender",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
                 Container(
-                  child: Row(
+                  child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
-                      Text("Female"),
-                      Radio(value:isfemale, groupValue: gender, onChanged: (bool istrue){
-                    
-                        setState(() {
-                              isfemale=!isfemale;
-                                ismale=!ismale;
-                                
-                            
-                        });
-                         if(isfemale){
-                            _gender="Female";
-                           }
-                       
-                      }),
-                      SizedBox(width: size.width/8),
-                      Text("Male"),
-                       Radio(value:ismale, groupValue: gender, onChanged: (bool istrue){
-                    
-                        setState(() {
-                              ismale=!ismale;
-                               isfemale=!isfemale;
-                               
-                                 
-                        });
-                        if(ismale){
-                                  _gender="Male";
-                                }
+                       Text("Date of Birthday",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
+                      Container(
                         
-                      }),
-               
-
+                        child: Container(
+                          width: size.width/2,
+                           margin: EdgeInsets.only(top: size.height/30),
+                          child: Text("$_birthday",style: TextStyle(fontSize: size.height/42),)
+                        ),
+                      ),
                     ],
                   ),
                 ),
+                 Container(
+                  margin: EdgeInsets.only(left: size.width/27,top: size.height/30),
+                  width: size.height/5,
+                  height: size.height/18,
+                  child: MaterialButton(
+                  color: Colors.blueAccent,
+                  child: Text("Select Date",style:TextStyle(color: Colors.white) ,),
+                  onPressed: (){
+                  _showDatepicker().then((data){
+                    setState(() {
+                      _birthdaydate=data;
+                      _birthday="${_birthdaydate.year}-${_birthdaydate.month}-${_birthdaydate.day}";
+                    
+                    });
+                  }
+                  
+                  );
+                  
+                  }),
+                        )
               ],
             )
           ),
+           Container(
+             height: size.height/7,
+            margin: EdgeInsets.only(left: size.width/55,top: size.height/15),
+            width: size.width/1.1,
+            child: Column(
+             
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Text("Password",style:TextStyle(fontSize: size.height/42,fontWeight: FontWeight.w600)),
+                SizedBox(height: size.height/110,),
+                TextFormField(
+                 
+                  obscureText: true,
+                  onSaved: ( name)=>user.name=name,
+                  validator: _nameFieldValidator,
+                  decoration: InputDecoration(
+                
+               
+                ),
+                
+                ),
+              ],
+            ),
+          ),
+           Container(
+             height: size.height/7,
+            margin: EdgeInsets.only(left: size.width/55),
+            width: size.width/1.1,
+            child: Column(
+             
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Text("Confirm Password",style:TextStyle(fontSize: size.height/42,fontWeight: FontWeight.w600)),
+                SizedBox(height: size.height/110,),
+                TextFormField(
+                 
+                  obscureText: true,
+                  onSaved: ( name)=>user.name=name,
+                  validator: _nameFieldValidator,
+                  decoration: InputDecoration(
+                
+               
+                ),
+                
+                ),
+              ],
+            ),
+          ),
             Container(
-              
+                   margin: EdgeInsets.only(top: size.height/12),
                   width: size.height/4,
                   height: size.height/15,
                   child: MaterialButton(
@@ -187,9 +224,8 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
           child: Text("Sign up",style:TextStyle(color: Colors.white) ,),
           onPressed: (){
             _validateAndSubmit();
-          /// //then navigate
-          /// 
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMainPage()));
+         
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()));
                 
                   }),
                 )

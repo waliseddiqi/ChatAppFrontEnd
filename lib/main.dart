@@ -1,4 +1,6 @@
 import 'package:chat_app/UI/offline_page.dart';
+import 'package:chat_app/UI/signin_orsignup.dart';
+import 'package:chat_app/UI/signin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -59,6 +61,8 @@ PageController pageController= new PageController();
         controller: pageController,
         physics: NeverScrollableScrollPhysics(),
         children: [
+          SigninOrSignup(pageController: pageController,),
+           SignIn(pageController: pageController,),
            MailVerfication(pageController: pageController,),
            EmailConfirmation(pageController: pageController,),
            UserSignUpPage()
