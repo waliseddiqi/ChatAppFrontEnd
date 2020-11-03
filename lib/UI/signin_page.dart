@@ -1,8 +1,10 @@
 import 'package:chat_app/core/enums.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../api.dart';
+import 'chat_main.dart';
 
 class SignIn extends StatefulWidget{
       final PageController pageController;
@@ -13,10 +15,16 @@ class SignIn extends StatefulWidget{
 }
 
 class _SignInState extends State<SignIn> {
+
+GlobalKey<ScaffoldState> _globalKey=new GlobalKey<ScaffoldState>();
+ Size size;
 String _email="";
 String _password="";
 
 API api=new API();
+
+
+
 
  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 String _emailFieldValidator(String name){
@@ -42,7 +50,39 @@ String _passwordFieldValidator(String name){
 
     if (_isValidForm()) {
         api.signIn(_email, _password).then((value) => {
-          print(value.body)
+          if(value.statusCode==200){
+            //print("Login successfully")
+           _globalKey.currentState.showSnackBar(
+             SnackBar(
+               elevation: 10,
+               backgroundColor: Colors.green,
+               duration: Duration(seconds: 1),
+               content: Text("Login successfully"))
+           ).closed.then((value) => {
+             Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()))
+           })
+           
+          }
+          else if(value.statusCode==401){
+            //print("Wrong password")
+             _globalKey.currentState.showSnackBar(
+             SnackBar(
+               elevation: 10,
+               backgroundColor: Colors.redAccent,
+              
+               content: Text("Incorrect Password or Email"))
+           )
+          }
+          else{
+            //print("user does not exits")
+             _globalKey.currentState.showSnackBar(
+             SnackBar(
+               elevation: 10,
+               backgroundColor: Colors.yellow,
+           
+               content: Text("User does not exits",style: TextStyle(color: Colors.black),))
+           )
+          }
           //if empty then user doesnt exits
           //if false wrong password
           //if true then everything alright
@@ -52,9 +92,10 @@ String _passwordFieldValidator(String name){
       }}
   @override
   Widget build(BuildContext context) {
-      Size size=MediaQuery.of(context).size;
+   size=MediaQuery.of(context).size;
       var connectionStatus = Provider.of<ConnectivityStatus>(context);
       return Scaffold(
+        key: _globalKey,
        body: SingleChildScrollView(
               child: Center(
 

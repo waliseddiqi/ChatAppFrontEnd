@@ -98,7 +98,7 @@ class _EmailConfirmationState extends State<EmailConfirmation> with SingleTicker
                         color: Colors.blueAccent,
                         child: Text("${animation.value<=0?"Re-send":"Continue"}",style:TextStyle(color: Colors.white) ,),
                         onPressed: (){
-                          widget.pageController.jumpToPage(2);
+                          widget.pageController.jumpToPage(4);
                           //Navigator.push(context, CupertinoPageRoute(builder: (context)=>UserSignUpPage()));
                              
                        /* if(animation.value==0){

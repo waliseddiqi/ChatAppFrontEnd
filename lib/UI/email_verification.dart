@@ -71,7 +71,7 @@ class _MailVerficationState extends State<MailVerfication> {
                     }
                             
                   });*/
-                 widget.pageController.jumpToPage(1);
+                 widget.pageController.jumpToPage(3);
                 //
                 
                 }),
