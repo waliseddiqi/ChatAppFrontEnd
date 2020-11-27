@@ -2,17 +2,49 @@ import 'package:chat_app/core/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'messages.dart';
+import 'dart:convert';
 
-class ChatMessagePage extends StatefulWidget{
+import 'package:chat_app/UI/Messages.dart';
+import 'package:chat_app/UI/select_private.dart';
+
+import 'package:chat_app/models/messages.dart';
+import 'package:chat_app/models/online_users.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+class ChatMessagePage extends StatelessWidget {
+  final String id;
+  final String username;
+  final String onlineStatus;
+  const ChatMessagePage({Key key, this.id, this.username, this.onlineStatus}) : super(key: key);
+  @override
+@override
+Widget build(BuildContext context) {
+  Size size=MediaQuery.of(context).size;
+  OnlineUsers onlineuser;
+  return ChangeNotifierProvider(
+
+    create: (context) => Messages(),
+      child: Scaffold(
+        
+        body: ChatMessagePagetab(),
+    ),
+  );
+}
+
+}
+class ChatMessagePagetab extends StatefulWidget{
   @override
   final String username;
   final String onlineStatus;
 
-  const ChatMessagePage({Key key, this.username, this.onlineStatus}) : super(key: key);
+  const ChatMessagePagetab({Key key, this.username, this.onlineStatus}) : super(key: key);
   _ChatMessagePageState createState() => _ChatMessagePageState();
 }
 
-class _ChatMessagePageState extends State<ChatMessagePage> {
+class _ChatMessagePageState extends State<ChatMessagePagetab> {
   @override
   Widget build(BuildContext context) {
    Size size=MediaQuery.of(context).size;

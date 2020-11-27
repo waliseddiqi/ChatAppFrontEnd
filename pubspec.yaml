@@ -33,10 +33,15 @@ dependencies:
   shared_preferences: ^0.5.12
   http: ^0.12.2
   connectivity: ^2.0.0
+  hive: ^1.4.4+1
+  path_provider: ^1.6.24
+  hive_flutter: ^0.3.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  build_runner: ^1.10.0
+  hive_generator: ^0.7.0+2  
+ 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -142,6 +142,7 @@ String _passwordFieldValidator(String name){
                    child: TextFormField(
                      onSaved: (password)=>_password=password,
                      //controller: emailfield,
+                     obscureText: true,
                      validator: _passwordFieldValidator,
                      style: TextStyle(fontSize: size.height/45),
                     decoration: InputDecoration(
@@ -151,12 +152,22 @@ String _passwordFieldValidator(String name){
                     ),
                    ),
                  ),
+                 GestureDetector(
+                 child: Container(
+                      margin: EdgeInsets.only(top: size.height/160,left: size.width/2.22),
+                        child: Text("Forgot Password ?",style: TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
+                   ),
+                 ),
                 Container(
-                  margin: EdgeInsets.only(top: size.height/6),
-                  width: size.height/4,
-                  height: size.height/15,
-                  child: MaterialButton(
-                    
+                  margin: EdgeInsets.only(top: size.height/18),
+                  width: size.height/4.4,
+                  height: size.height/13,
+                
+                  child: RaisedButton(
+                   shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(size.height/15),
+                   
+                  ),
                     color: Colors.blueAccent,
                     child: Text("Sign in",style:TextStyle(color: Colors.white) ,),
                     onPressed: (){
@@ -172,7 +183,23 @@ String _passwordFieldValidator(String name){
                   //
                   
                   }),
-                )
+                ),
+                 GestureDetector(
+                 child: Container(
+                      margin: EdgeInsets.only(top: size.height/14),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Don't have an account?",style: TextStyle(fontSize: size.height/45,fontWeight: FontWeight.w600)),
+                            InkWell(
+                              onTap: (){
+                                widget.pageController.jumpToPage(1);
+                              },
+                              child: Text(" Sign up here",style: TextStyle(fontSize: size.height/45,fontWeight: FontWeight.w600,color: Colors.blue))),
+                          ],
+                        ),
+                   ),
+                 ),
                  
                ],
              ),
