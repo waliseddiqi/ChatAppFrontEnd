@@ -15,10 +15,10 @@ static void connect(){
 print("connected");
 }
 
-void emitUserSignup(String name,String age,String gender){
+void emitUserSignup(String name,String age){
      String id="";
       print("connectedsss");
-     socket.emit('userSignup', {"name":name,"age":age,"gender":gender});
+     socket.emit('userSignup', {"name":name,"age":age});
    
     print("User name created");
      socket.on("ID", (data)async{
@@ -31,6 +31,10 @@ void emitUserSignup(String name,String age,String gender){
     
 }
 
+
+void sendMessage(){
+
+}
 
 
 

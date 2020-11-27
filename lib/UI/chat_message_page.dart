@@ -1,10 +1,10 @@
+import 'package:chat_app/UI/messages.dart';
 import 'package:chat_app/core/colors.dart';
 import 'package:flutter/material.dart';
 
-import 'messages.dart';
 import 'dart:convert';
 
-import 'package:chat_app/UI/Messages.dart';
+
 import 'package:chat_app/UI/select_private.dart';
 
 import 'package:chat_app/models/messages.dart';
@@ -19,22 +19,22 @@ class ChatMessagePage extends StatelessWidget {
   final String username;
   final String onlineStatus;
   const ChatMessagePage({Key key, this.id, this.username, this.onlineStatus}) : super(key: key);
+
+
+
+
+
   @override
-@override
 Widget build(BuildContext context) {
   Size size=MediaQuery.of(context).size;
   OnlineUsers onlineuser;
   return ChangeNotifierProvider(
-
     create: (context) => Messages(),
       child: Scaffold(
-        
         body: ChatMessagePagetab(),
-    ),
+  ),
   );
-}
-
-}
+}}
 class ChatMessagePagetab extends StatefulWidget{
   @override
   final String username;
@@ -45,6 +45,21 @@ class ChatMessagePagetab extends StatefulWidget{
 }
 
 class _ChatMessagePageState extends State<ChatMessagePagetab> {
+
+  GlobalKey<AnimatedListState> animatedListKey=GlobalKey<AnimatedListState>();
+//SendPrivateMessage
+
+
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+void sendMessage(){
+  
+}
   @override
   Widget build(BuildContext context) {
    Size size=MediaQuery.of(context).size;
@@ -68,7 +83,7 @@ class _ChatMessagePageState extends State<ChatMessagePagetab> {
                      width: 55,
                      height: 55,
                      color: Colors.yellow,
-                    child: Center(child: Text("${widget.username[0]}",style: TextStyle(
+                    child: Center(child: Text("${widget.username}",style: TextStyle(
                       fontSize: size.height/35)),
                    )),
                    Container(
@@ -84,12 +99,12 @@ class _ChatMessagePageState extends State<ChatMessagePagetab> {
                  ],
                )
              ),
-               /*Container(
+               Container(
                   color: Colors.yellow,
-                   height: size.height*0.90,
+                   height: size.height*0.75,
                    
                    child:MessagesField(animatedListKey: animatedListKey,)
-                 ),*/
+                 ),
              Container(
                color: ColorsPallete.colora,
                width: size.width,

@@ -47,6 +47,14 @@ return await http.post(Uri.encodeFull(url),body: jsonEncode(body),headers: heade
 
 }
 
+Future<http.Response> signUp(String email,String password)async{
+var url="http://192.168.137.1:5000/userauth/signup/";
+Map<String,String> headers = {'Accept': 'application/json',"Content-type": "application/json"};
+  var body={"email":email,"password":password};
+return await http.post(Uri.encodeFull(url),body: jsonEncode(body),headers: headers);
+
+}
+
 
 
 

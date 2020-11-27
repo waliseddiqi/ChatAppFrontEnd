@@ -99,9 +99,9 @@ class _EmailConfirmationState extends State<EmailConfirmation> with SingleTicker
                         child: Text("${animation.value<=0?"Re-send":"Continue"}",style:TextStyle(color: Colors.white) ,),
                         onPressed: (){
                           widget.pageController.jumpToPage(4);
-                          //Navigator.push(context, CupertinoPageRoute(builder: (context)=>UserSignUpPage()));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context)=>UserSignUpPage()));
                              
-                       /* if(animation.value==0){
+                        if(animation.value==0){
                        api.sendEmail(widget.email).then((value) => {
                           print(value)
                         });
@@ -119,7 +119,7 @@ class _EmailConfirmationState extends State<EmailConfirmation> with SingleTicker
 
                          } );
 
-                        }*/
+                        }
                         
                 }),
               ),

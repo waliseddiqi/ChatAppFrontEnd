@@ -64,13 +64,13 @@ class _MailVerficationState extends State<MailVerfication> {
                   color: Colors.blueAccent,
                   child: Text("Send",style:TextStyle(color: Colors.white) ,),
                   onPressed: (){
-                  /*api.sendEmail(emailfield.text.toString()).then((value) => {
+                  api.sendEmail(emailfield.text.toString()).then((value) => {
                     if(value.statusCode==200){
                       
-                     //   Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailConfirmation()))
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailConfirmation()))
                     }
                             
-                  });*/
+                  });
                  widget.pageController.jumpToPage(3);
                 //
                 

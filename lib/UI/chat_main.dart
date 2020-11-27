@@ -27,11 +27,6 @@ void inithive()async{
 
   ChatModelHive mm=box.get("key") as ChatModelHive;
   
-  for (var item in mm.messages){
-     print(item.sender);
-     print(item.messagebody);
-     print(box.length);
-  }
 
 
 }
@@ -117,6 +112,7 @@ void initState() {
                            
                           return GestureDetector(
                             onTap: (){
+                              print("dfsdf");
                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
                               =>ChatMessagePage(username: "sdfsf",onlineStatus:"Offline",)));  
                             },

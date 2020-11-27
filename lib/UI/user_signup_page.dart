@@ -4,6 +4,7 @@ import 'package:chat_app/models/user.dart';
 import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/material.dart';
 
+import '../api.dart';
 import 'chat_main.dart';
 
 class UserSignUpPage extends StatefulWidget{
@@ -27,6 +28,7 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
 
   SocketConnect socketConnect;
 
+  API api=new API();
 
 
   @override
@@ -51,8 +53,9 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
     if (_isValidForm()) {
          socketConnect=new SocketConnect();
          user.gender=_gender;
+         user.age=_birthday;
          print(user.gender);
-      socketConnect.emitUserSignup(user.name,user.age,user.gender);
+      socketConnect.emitUserSignup(user.name,user.age);
        
       }}
   String _nameFieldValidator(String name){
@@ -108,7 +111,7 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                 Text("Username",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
                 SizedBox(height: size.height/110,),
                 TextFormField(
-                  onSaved: (age) =>user.age=age ,
+                  onSaved: (name) =>user.name=name ,
                   validator: _ageFieldValidator,
                   style: TextStyle(fontSize: size.height/42),
                   decoration: InputDecoration(hintText: "Username",
@@ -179,7 +182,7 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                 TextFormField(
                  
                   obscureText: true,
-                  onSaved: ( name)=>user.name=name,
+                 // onSaved: ( name)=>user.name=name,
                   validator: _nameFieldValidator,
                   decoration: InputDecoration(
                 
@@ -203,7 +206,7 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                 TextFormField(
                  
                   obscureText: true,
-                  onSaved: ( name)=>user.name=name,
+                 // onSaved: ( name)=>user.name=name,
                   validator: _nameFieldValidator,
                   decoration: InputDecoration(
                 
