@@ -1,4 +1,5 @@
 
+import 'package:chat_app/UI/contacts.dart';
 import 'package:chat_app/core/colors.dart';
 import 'package:chat_app/hive/chat_model.dart';
 import 'package:chat_app/models/chats.dart';
@@ -95,7 +96,7 @@ void initState() {
             ),
             Container(
               width: size.width,
-              height: size.height/1.4,
+              height: size.height/1.22,
               child: TabBarView(
                 controller: tabController,
                 children: [
@@ -127,7 +128,8 @@ void initState() {
 
 
                         }),
-                        Container( 
+                        Contacts()
+                        /*Container( 
               width: size.width,
               height: size.height/1.4,
               child: ValueListenableBuilder(valueListenable: Hive.box("testBox").listenable(), 
@@ -139,7 +141,7 @@ void initState() {
                   }),
                 );
               } ),
-              )
+              )*/
                         ]),
             )
           ],

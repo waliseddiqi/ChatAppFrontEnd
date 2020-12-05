@@ -1,3 +1,4 @@
+import 'package:chat_app/UI/email_verification.dart';
 import 'package:chat_app/core/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,8 @@ import 'chat_main.dart';
 
 class SignIn extends StatefulWidget{
       final PageController pageController;
-
-  const SignIn({Key key, this.pageController}) : super(key: key);
+      final BuildContext mainContext;
+  const SignIn({Key key, this.pageController, this.mainContext}) : super(key: key);
   @override
   _SignInState createState() => _SignInState();
 }
@@ -193,7 +194,7 @@ String _passwordFieldValidator(String name){
                             Text("Don't have an account?",style: TextStyle(fontSize: size.height/45,fontWeight: FontWeight.w600)),
                             InkWell(
                               onTap: (){
-                                widget.pageController.jumpToPage(1);
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MailVerfication(mainContext:widget.mainContext,)));
                               },
                               child: Text(" Sign up here",style: TextStyle(fontSize: size.height/45,fontWeight: FontWeight.w600,color: Colors.blue))),
                           ],

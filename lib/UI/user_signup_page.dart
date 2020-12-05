@@ -1,16 +1,22 @@
 
+import 'dart:convert';
+
 import 'package:chat_app/UI/select_private.dart';
+import 'package:chat_app/core/enums.dart';
 import 'package:chat_app/models/user.dart';
 import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
 import 'chat_main.dart';
+import 'offline_page.dart';
 
 class UserSignUpPage extends StatefulWidget{
  
-
-  const UserSignUpPage({Key key}) : super(key: key);
+final BuildContext mainContext;
+  const UserSignUpPage({Key key, this.mainContext}) : super(key: key);
   @override
   _UserSignUpPageState createState() => _UserSignUpPageState();
 }
@@ -19,7 +25,7 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
   ScrollController scrollController=new ScrollController();
   User user=new User();
   String _gender="Female";
-
+  String _password="";
   bool ismale=false;
 
   bool isfemale=true;
@@ -29,12 +35,17 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
   SocketConnect socketConnect;
 
   API api=new API();
-
+  String email="";
+  void getEmail()async{
+     SharedPreferences prefs=await SharedPreferences.getInstance();
+       email=prefs.getString("email");
+  }
 
   @override
   void initState() {
     SocketConnect.connect();
     super.initState();
+    getEmail();
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -56,9 +67,20 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
          user.age=_birthday;
          print(user.gender);
       socketConnect.emitUserSignup(user.name,user.age);
-       
+     
+      api.signUp(email, _password,user.name).then((value)async{
+        var parsed=json.decode(value.body);
+          SharedPreferences prefs=await SharedPreferences.getInstance();
+          prefs.setString("token", parsed["token"]);
+       // print(parsed["token"]);
+      });
       }}
   String _nameFieldValidator(String name){
+    if(name==null||name==""){
+      return "Please Enter your name";
+    }
+  }
+  String _passswordValidator(String name){
     if(name==null||name==""){
       return "Please Enter your name";
     }
@@ -82,7 +104,9 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
   @override
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
-    return Scaffold(
+    var connectionStatus = Provider.of<ConnectivityStatus>(widget.mainContext);
+   return connectionStatus == ConnectivityStatus.Offline?OfflinePage():
+     Scaffold(
       body: SingleChildScrollView(
               child: Center(
           child: Container(
@@ -182,8 +206,8 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                 TextFormField(
                  
                   obscureText: true,
-                 // onSaved: ( name)=>user.name=name,
-                  validator: _nameFieldValidator,
+                  onSaved: (pass)=>_password=pass,
+                  validator: _passswordValidator,
                   decoration: InputDecoration(
                 
                
@@ -207,7 +231,7 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                  
                   obscureText: true,
                  // onSaved: ( name)=>user.name=name,
-                  validator: _nameFieldValidator,
+                  validator: _passswordValidator,
                   decoration: InputDecoration(
                 
                

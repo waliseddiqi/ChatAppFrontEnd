@@ -1,14 +1,13 @@
 import 'dart:io';
-
 import 'package:chat_app/UI/offline_page.dart';
 import 'package:chat_app/UI/signin_orsignup.dart';
 import 'package:chat_app/UI/signin_page.dart';
 import 'package:chat_app/delay_page.dart';
 import 'package:chat_app/hive/chat_model.dart';
+import 'package:chat_app/models/authmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'UI/email_confirmation.dart';
 import 'UI/email_verification.dart';
 import 'UI/user_signup_page.dart';
@@ -34,8 +33,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return StreamProvider(
-      create: (context) => ConnectivityService().connectionStatusController.stream,
+    return MultiProvider(
+      providers: [
+          StreamProvider<ConnectivityStatus>(create: (context) => ConnectivityService().connectionStatusController.stream),
+          ChangeNotifierProvider<AuthModel>(create: (context) => AuthModel()),
+        ],
           child: MaterialApp(
             routes: {
                '/emailConfirmation': (context) => EmailConfirmation(),
@@ -63,6 +65,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+
+
 PageController pageController= new PageController();
 bool _isdelayfinised=false;
 void delaypageduration(){
@@ -73,17 +77,26 @@ void delaypageduration(){
  
 });
 }
+/*void deleteprofes()async{
+  SharedPreferences prefs=await SharedPreferences.getInstance();
+  prefs.clear();
+}*/
 
 @override
   void initState() {
     // TODO: implement initState
     delaypageduration();
     super.initState();
+    
+    
   }
+  
   @override
   Widget build(BuildContext context) {
      Size size=MediaQuery.of(context).size;
      var connectionStatus = Provider.of<ConnectivityStatus>(context);
+     var authstatus=Provider.of<AuthModel>(context);
+     authstatus.checkAuth();
    return connectionStatus == ConnectivityStatus.Offline?OfflinePage():
      Scaffold(
      
@@ -98,17 +111,9 @@ void delaypageduration(){
           secondChild:  Container(
             width: size.width,
             height: size.height,
-            child: PageView(
-            controller: pageController,
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-             
-               SignIn(pageController: pageController,),
-               MailVerfication(pageController: pageController,),
-               EmailConfirmation(pageController: pageController,),
-               UserSignUpPage()
-            ],
-        ),
+            child:   
+            authstatus.auth==Auth.Authicated?Container(color: Colors.red,):
+               SignIn(pageController: pageController,mainContext: context,),
           ) ,
         ),
       )

@@ -1,13 +1,17 @@
 import 'package:chat_app/UI/user_signup_page.dart';
+import 'package:chat_app/core/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../api.dart';
+import 'offline_page.dart';
 
 class EmailConfirmation extends StatefulWidget{
   final String email;
     final PageController pageController;
-  const EmailConfirmation({Key key, this.email, this.pageController}) : super(key: key);
+    final BuildContext mainContext;
+  const EmailConfirmation({Key key, this.email, this.pageController, this.mainContext}) : super(key: key);
   @override
   _EmailConfirmationState createState() => _EmailConfirmationState();
 }
@@ -46,7 +50,9 @@ class _EmailConfirmationState extends State<EmailConfirmation> with SingleTicker
    @override
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
-    return WillPopScope(
+     var connectionStatus = Provider.of<ConnectivityStatus>(widget.mainContext);
+   return connectionStatus == ConnectivityStatus.Offline?OfflinePage():
+     WillPopScope(
       onWillPop: (){
         widget.pageController.jumpToPage(0);
       },
@@ -98,10 +104,10 @@ class _EmailConfirmationState extends State<EmailConfirmation> with SingleTicker
                         color: Colors.blueAccent,
                         child: Text("${animation.value<=0?"Re-send":"Continue"}",style:TextStyle(color: Colors.white) ,),
                         onPressed: (){
-                          widget.pageController.jumpToPage(4);
-                          Navigator.push(context, CupertinoPageRoute(builder: (context)=>UserSignUpPage()));
+                          
+                          Navigator.push(context, CupertinoPageRoute(builder: (context)=>UserSignUpPage(mainContext: widget.mainContext,)));
                              
-                        if(animation.value==0){
+                       /* if(animation.value==0){
                        api.sendEmail(widget.email).then((value) => {
                           print(value)
                         });
@@ -119,7 +125,7 @@ class _EmailConfirmationState extends State<EmailConfirmation> with SingleTicker
 
                          } );
 
-                        }
+                        }*/
                         
                 }),
               ),
