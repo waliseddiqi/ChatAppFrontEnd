@@ -62,18 +62,31 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
   void _validateAndSubmit() async {
 
     if (_isValidForm()) {
-         socketConnect=new SocketConnect();
+        /* socketConnect=new SocketConnect();
          user.gender=_gender;
-         user.age=_birthday;
+   
          print(user.gender);
-      socketConnect.emitUserSignup(user.name,user.age);
-     
-      api.signUp(email, _password,user.name).then((value)async{
+      socketConnect.emitUserSignup(user.name,user.age);*/
+            user.age=_birthday;
+      api.signupUser(user.name, user.age).then((value)async{
+        if(value.statusCode==200){
+           var parsed=json.decode(value.body);
+          SharedPreferences prefs=await SharedPreferences.getInstance();
+          print(parsed);
+          prefs.setString("username", parsed["username"]);
+          prefs.setString("userid", parsed["userid"]);
+          //after general signup datas saved put userid in personal infos in database
+           api.signUp(email, _password,user.name,parsed["userid"]).then((value)async{
         var parsed=json.decode(value.body);
           SharedPreferences prefs=await SharedPreferences.getInstance();
           prefs.setString("token", parsed["token"]);
        // print(parsed["token"]);
       });
+        }else{
+          print("couldnt create user");
+        }
+      });
+     
       }}
   String _nameFieldValidator(String name){
     if(name==null||name==""){

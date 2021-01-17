@@ -25,7 +25,13 @@ Future<http.Response> getUsers ()async{
 return await http.get(Uri.encodeFull(url),headers: headers);
 }
 
+Future<http.Response> signupUser(String username,String age)async{
+  var url =devurl+'/user/signupuser';
 
+  var body={"username":username,"age":age};
+    Map<String,String> headers = {'Accept': 'application/json',"Content-type": "application/json"};
+  return await http.post(Uri.encodeFull(url),body: jsonEncode(body),headers: headers);
+}
 
 Future<http.Response> verifyEmail(String code,String email)async{
   var url=devurl+"/verifyEmail/";
@@ -52,12 +58,13 @@ Future<http.Response> signIn(String email,String password)async{
 
 }
 
-Future<http.Response> signUp(String email,String password,String username)async{
+Future<http.Response> signUp(String email,String password,String username,String userid)async{
   var url=devurl+"/userauth/signup/";
-  var body={"email":email,"password":password,"username":username};
+  var body={"email":email,"password":password,"username":username,"userid":userid};
   return await http.post(Uri.encodeFull(url),body: jsonEncode(body),headers: headers);
 
 }
+
 Future<http.Response> checkauth()async{
   var url=devurl+"/userauth/checkauth";
   SharedPreferences prefs=await SharedPreferences.getInstance();

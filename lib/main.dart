@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:chat_app/UI/chat_main.dart';
 import 'package:chat_app/UI/offline_page.dart';
 import 'package:chat_app/UI/signin_orsignup.dart';
 import 'package:chat_app/UI/signin_page.dart';
@@ -65,7 +66,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-
+bool checked=false;
 
 PageController pageController= new PageController();
 bool _isdelayfinised=false;
@@ -77,17 +78,18 @@ void delaypageduration(){
  
 });
 }
-/*void deleteprofes()async{
-  SharedPreferences prefs=await SharedPreferences.getInstance();
-  prefs.clear();
-}*/
+
+void checkAuth()async{
+SharedPreferences prefs=await SharedPreferences.getInstance();
+prefs.clear();
+}
 
 @override
   void initState() {
-    // TODO: implement initState
+     checkAuth();
     delaypageduration();
     super.initState();
-    
+  
     
   }
   
@@ -95,8 +97,13 @@ void delaypageduration(){
   Widget build(BuildContext context) {
      Size size=MediaQuery.of(context).size;
      var connectionStatus = Provider.of<ConnectivityStatus>(context);
-     var authstatus=Provider.of<AuthModel>(context);
+      var authstatus=Provider.of<AuthModel>(context);
+     if(!checked){
+     
      authstatus.checkAuth();
+     checked=true;
+     }
+      
    return connectionStatus == ConnectivityStatus.Offline?OfflinePage():
      Scaffold(
      
@@ -112,7 +119,7 @@ void delaypageduration(){
             width: size.width,
             height: size.height,
             child:   
-            authstatus.auth==Auth.Authicated?Container(color: Colors.red,):
+            authstatus.auth==Auth.Authicated?ChatMain():
                SignIn(pageController: pageController,mainContext: context,),
           ) ,
         ),

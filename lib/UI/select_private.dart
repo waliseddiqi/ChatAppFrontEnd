@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../api.dart';
-import 'chat_page.dart';
+import 'chat_pagepp.dart';
 
 class SelectPrivate extends StatefulWidget {
   final OnlineUsers onlineUsers;
@@ -141,7 +141,7 @@ void disconnectUser(String username,String id)async{
                     color: Colors.redAccent,
                     child: Center(child: IconButton(icon: Icon(Icons.send,size: size.height/38,color: Colors.white,),
                     onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Chat(id: list[index].id,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Chat(id: list[index].userid,)));
                     },
                     ),),
               ),

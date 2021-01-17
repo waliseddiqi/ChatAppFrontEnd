@@ -54,7 +54,7 @@ void additem()async{
 void initState() { 
   
   super.initState();
-  inithive();
+ // inithive();
   tabController=new TabController(length: 2, vsync: this);
 } 
 
@@ -100,7 +100,8 @@ void initState() {
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  ValueListenableBuilder(
+                  Container()
+                 /*  ValueListenableBuilder(
                       valueListenable: Hive.box('testBox').listenable(),
                         builder: (context, box, widget) {
                         return 
@@ -114,8 +115,7 @@ void initState() {
                           return GestureDetector(
                             onTap: (){
                               print("dfsdf");
-                                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
-                              =>ChatMessagePage(username: "sdfsf",onlineStatus:"Offline",)));  
+                                   
                             },
                               child: Container(
                               child: Text("${value.username}"),
@@ -127,8 +127,8 @@ void initState() {
                  
 
 
-                        }),
-                        Contacts()
+                        }),*/
+                        ,Contacts()
                         /*Container( 
               width: size.width,
               height: size.height/1.4,

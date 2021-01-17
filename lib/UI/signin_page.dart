@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+
 import 'package:chat_app/UI/email_verification.dart';
 import 'package:chat_app/core/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
 import 'chat_main.dart';
@@ -50,9 +54,17 @@ String _passwordFieldValidator(String name){
   void _validateAndSubmit() async {
 
     if (_isValidForm()) {
-        api.signIn(_email, _password).then((value) => {
+        api.signIn(_email, _password).then((value)async{
+         
+          //print(parsed["searchres"][0]["userid"]);
           if(value.statusCode==200){
             //print("Login successfully")
+            var parsed=json.decode(value.body);
+
+          SharedPreferences prefs=await SharedPreferences.getInstance();
+          prefs.setString("token", parsed["token"]);
+          prefs.setString("username",parsed["searchres"][0]["username"]);
+          prefs.setString("userid", parsed["searchres"][0]["userid"]);
            _globalKey.currentState.showSnackBar(
              SnackBar(
                elevation: 10,
@@ -61,7 +73,7 @@ String _passwordFieldValidator(String name){
                content: Text("Login successfully"))
            ).closed.then((value) => {
              Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()))
-           })
+           });
            
           }
           else if(value.statusCode==401){
@@ -72,7 +84,7 @@ String _passwordFieldValidator(String name){
                backgroundColor: Colors.redAccent,
               
                content: Text("Incorrect Password or Email"))
-           )
+           );
           }
           else{
             //print("user does not exits")
@@ -82,7 +94,7 @@ String _passwordFieldValidator(String name){
                backgroundColor: Colors.yellow,
            
                content: Text("User does not exits",style: TextStyle(color: Colors.black),))
-           )
+           );
           }
           //if empty then user doesnt exits
           //if false wrong password
