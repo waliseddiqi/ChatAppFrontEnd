@@ -1,8 +1,14 @@
 import 'package:chat_app/UI/messages.dart';
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/core/colors.dart';
+import 'package:chat_app/core/enums.dart';
+import 'package:chat_app/models/local_message.dart';
+import 'package:chat_app/models/local_messages.dart';
+
+import 'package:chat_app/models/message.dart';
 import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/material.dart';
-
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'dart:convert';
 
 
@@ -11,6 +17,7 @@ import 'package:chat_app/UI/select_private.dart';
 import 'package:chat_app/models/messages.dart';
 import 'package:chat_app/models/online_users.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,6 +41,7 @@ Widget build(BuildContext context) {
   Size size=MediaQuery.of(context).size;
   OnlineUsers onlineuser;
   return ChangeNotifierProvider(
+    
     create: (context) => Messages(),
       child: Scaffold(
         body: ChatMessagePagetab(username: username,
@@ -48,7 +56,7 @@ Widget build(BuildContext context) {
   );
 }}
 class ChatMessagePagetab extends StatefulWidget{
-  @override
+  
     final String id;
   final String username;
   final String onlineStatus;
@@ -64,18 +72,22 @@ class _ChatMessagePageState extends State<ChatMessagePagetab> with WidgetsBindin
 
   GlobalKey<AnimatedListState> animatedListKey=GlobalKey<AnimatedListState>();
 //SendPrivateMessage
-
-
-
+List<LocalMessage> messages=List<LocalMessage>();
+var box;
+//ChatModelHive chatModelHive;
 SocketConnect socketConnect=new SocketConnect();
 @override
   void initState() {
+   initbox();
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   onprivateMessage();
-    //getuserid();
+  // _getMessages();
   }
+void initbox()async{
+       box = await Hive.box(messages_Box);
+}
 
 
 void sendMessage(String msg){
@@ -86,7 +98,7 @@ void sendMessage(String msg){
 
 }
 void onprivateMessage(){
-SocketConnect.socket.on("pmsg", (data){
+SocketConnect.socket.on(on_Private_Message, (data){
 /*
  "msg":data.msg,
   "userid":data.userid,
@@ -96,13 +108,32 @@ var parsed=json.decode(data);
 var body=parsed['data'];
 print("message recieved");
 print(parsed['data']);
-   Messages messages=   Provider.of<Messages>(context,listen: false);
+   setState(() {
+      LocalMessage message=new LocalMessage();
+    message.isOwn=false;
+    message.messagebody="${body['msg']}";
+    message.sender="${body['username']}";
+    message.time= DateTime.now().toString();
+    message.isPhoto=false;
+   messages.add(message);
+ //animatedListKey.currentState.insertItem(messages.length-1,duration: Duration(milliseconds: 180));
+   });
  
-
-    messages.setmessage("${body['msg']}", "${body['username']}" , false, DateTime.now().toString());
- animatedListKey.currentState.insertItem(messages.messages.length-1,duration: Duration(milliseconds: 180));
+   
 });
 
+}
+void _savemessages(String username,String id,List<LocalMessage> messages)async{
+  ///first addall then putvar box = await Hive.openBox('testBox');
+      
+
+   
+
+
+ LocalMessages messagesmodel=new LocalMessages(messages: messages,id: id,userName: username);
+ await box.put(id, messagesmodel).then((value){
+   Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()));
+ });
 }
 void onDisconnected(){
   socketConnect.onDisConnected(widget.selfid);
@@ -128,11 +159,11 @@ void didChangeAppLifecycleState(AppLifecycleState state){
 TextEditingController messageText=new TextEditingController();
   @override
   Widget build(BuildContext context) {
-
    Size size=MediaQuery.of(context).size;
    return WillPopScope(
      onWillPop: (){
-       Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()));
+   _savemessages(widget.username, widget.id, messages);
+      
        return;
      },
         child: Scaffold(
@@ -176,7 +207,10 @@ TextEditingController messageText=new TextEditingController();
                     color: Colors.white,
                      height: size.height*0.75,
                      
-                     child:MessagesField(animatedListKey: animatedListKey,)
+                     child:
+                  
+                     MessagesField(animatedListKey: animatedListKey,id: widget.id,username: widget.username,messages: messages,)
+                    
                    ),
                Container(
                  color: ColorsPallete.colora,
@@ -217,11 +251,21 @@ TextEditingController messageText=new TextEditingController();
                        child: IconButton(icon: Icon(Icons.send),onPressed: (){
                         // onconnected();
                         sendMessage(messageText.text.toString());
-                        Messages messages=   Provider.of<Messages>(context,listen: false);
+                      
                          if(messageText.text!=""){
-                           DateTime now=DateTime.now();
-                        messages.setmessage(messageText.text.toString(), "You", true, "${now.hour}:${now.minute}:${now.second}");
-                        animatedListKey.currentState.insertItem(messages.messages.length-1,duration: Duration(milliseconds: 180));
+                           setState(() {
+                             LocalMessage message=new LocalMessage();
+                            message.isOwn=true;
+                            message.messagebody=messageText.text.toString();
+                            message.sender="You";
+                            message.time= DateTime.now().toString();
+                            message.isPhoto=false;
+                            messages.add(message);
+                            //  animatedListKey.currentState.insertItem(messages.length-1,duration: Duration(milliseconds: 180));
+                       
+                           });
+                            
+                      
                        // sendMessage(widget.id, messageText.text.toString());
                              messageText.clear();
                              }}),)

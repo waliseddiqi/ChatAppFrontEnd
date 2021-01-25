@@ -8,18 +8,17 @@ class DelayPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
-    return Scaffold(
-          body: Container(
-            height: size.height,
-            width: size.width,
-            child: Center(
+    return  Scaffold(
+          body: Center(
               child: Container(
-              height: size.height/4,
-              width: size.width/3,
-              color: Colors.red,
+              height: size.height/2,
+              width: size.width/1.5,
+              decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage("./assets/logo.jpeg"),fit: BoxFit.contain)
+              ),
+        ),
+            
       ),
-            ),
-          ),
     );
   }
 }

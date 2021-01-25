@@ -4,12 +4,7 @@ import 'chat.dart';
 import 'message.dart';
 import 'package:hive/hive.dart';
 class Chats extends ChangeNotifier{
-void save()async{
 
-var tab=await Hive.openBox("df");
-
-
-}
   Set<Chat> chats;
 
   void setchat(String id,String lastMessage,List<Message> messages,String time){

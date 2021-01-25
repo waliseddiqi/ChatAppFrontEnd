@@ -1,11 +1,17 @@
 import 'dart:convert';
 
+//import 'package:chat_app/hive/chat_model.dart';
+import 'package:chat_app/constants.dart';
+import 'package:chat_app/models/local_chat.dart';
+import 'package:chat_app/models/message.dart';
 import 'package:chat_app/models/onlineUsers.dart';
 import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api.dart';
+import 'chat_main.dart';
 import 'chat_message_page.dart';
 
 class Contacts extends StatefulWidget{
@@ -37,7 +43,15 @@ String username="";
      
     
   }
+void _createChat(String username,String id)async{
+   var box = await Hive.box(chat_Box);
+  LocalChat chat=new LocalChat(id: id,userName: username);
+ 
 
+ await box.put(id, chat).then((value){
+   Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()));
+ });
+}
   void connectsocket(){
   SocketConnect.connect();
   onconnected();
@@ -58,7 +72,7 @@ void getuserid()async{
    connectsocket();
   //print(userid);
 }
-
+  
 
 
 void getUsers()async{
@@ -79,6 +93,9 @@ setState(() {
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
    return Scaffold(
+     appBar: AppBar(
+       title: Text("Contacts"),
+     ),
       body: Center(
         child: Container(
           width: size.width,
@@ -90,27 +107,22 @@ setState(() {
             itemBuilder: (context,index){
               return 
               
-              users[index].userid==userid?Container(color: Colors.red,
-              child: Text("Yourself"),
-              height: size.height/8
-              ):Container(
+              users[index].userid==userid?SizedBox():Container(
                 child: GestureDetector(
                   onTap: (){
-                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
-                                =>ChatMessagePage(username: users[index].username,
-                                id: users[index].userid,
-                                onlineStatus:"Online",
-                                selfid: userid,
-                                selfname: username,
-                                ))); 
+                   
+                                //to create chat inside chats 
+                               _createChat(users[index].username,users[index].userid);
+
                   },
                                 child:
                      Container(
+                       height: size.height/8,
                     margin: EdgeInsets.only(top: size.height/35),
                     child: ListTile(
                       title: Text(users[index].username,style: TextStyle(fontWeight: FontWeight.w600),),
                       tileColor: Colors.green,
-                      subtitle: Text("BirthDay: "+users[index].userid),
+                     
                       trailing: Text(users[index].onlineStatus?"Online":"Offline"),
                     ),
                   ),

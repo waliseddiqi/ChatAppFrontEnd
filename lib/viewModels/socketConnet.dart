@@ -7,7 +7,7 @@ class SocketConnect{
 static IO.Socket socket;
 static void connect(){
   
- socket = IO.io('http://192.168.146.1:3000',<String, dynamic>{
+ socket = IO.io('http://192.168.137.1:3000',<String, dynamic>{
     'transports': ['websocket'],
     'autoConnect': false,
     });

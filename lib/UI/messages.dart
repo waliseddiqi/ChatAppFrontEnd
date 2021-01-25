@@ -1,10 +1,19 @@
+
+import 'package:chat_app/constants.dart';
+import 'package:chat_app/models/local_message.dart';
+import 'package:chat_app/models/local_messages.dart';
+import 'package:chat_app/models/message.dart';
 import 'package:chat_app/models/messages.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 class MessagesField extends StatefulWidget {
  final GlobalKey<AnimatedListState> animatedListKey;
-  MessagesField({Key key, this.animatedListKey}) : super(key: key);
+ final String id;
+ final String username;
+final List<LocalMessage> messages;
+  MessagesField({Key key, this.animatedListKey, this.id, this.username, this.messages}) : super(key: key);
 
 
   @override
@@ -13,58 +22,85 @@ class MessagesField extends StatefulWidget {
 
 class _MyMessagesFieldState extends State<MessagesField> {
 
-List<String>messages=new List<String>();
-
+LocalMessages messagesmodel;
+bool _isLoading=false;
 @override
   void initState() {
-  
+     
     super.initState();
+   // _getMessages(widget.username, widget.id, messages)
+   _getMessages();
   }
+ void _getMessages()async{
+  var box =  Hive.box(messages_Box);
+      
+setState(() {
+    messagesmodel=box.get(widget.id)  as LocalMessages;
+  });
+if(messagesmodel!=null){
+for (var i = 0; i < messagesmodel.messages.length; i++) {
+        print(messagesmodel.messages[i].messagebody);
+      }
+  if(messagesmodel.messages.length>0){
+    setState(() {
+      
+       widget.messages.addAll(messagesmodel.messages);
+    });
+ 
+  //widget.animatedListKey.currentState.insertItem(widget.messages.length-1,duration: Duration(milliseconds: 180));
+  
+       }
+}
+  
+       }
+
+
+
 
   @override
   Widget build(BuildContext context) {
+   
     Size size=MediaQuery.of(context).size;
     return
-   Consumer<Messages>(
-             builder: (context,data,child)
-          
-     =>  Center(
+           
+      Center(
        child: Container(
+
               height: size.height*0.80,
-              child: AnimatedList(
+              child: ListView.builder(
                 reverse: true,
-                key: widget.animatedListKey,
-                initialItemCount: data.messages.length,
+                itemCount: widget.messages.length,
+                //key: widget.animatedListKey,
+               // initialItemCount: widget.messages.length,
                 padding: EdgeInsets.zero,
               
-                itemBuilder: (context,index,Animation<double> animation)=>
-                  listItems(context, index, animation, data, size)
+                itemBuilder: (context,index)=>
+             
+                  listItems(context, index, widget.messages, size)
                
                 
                 ),
             
           ),
-     ),
+     
       
     );
   }
-  Widget listItems(context,int index,animation,Messages data,Size size){
-    return 
+  Widget listItems(context,int index,List<LocalMessage> messages,Size size){
+    return
     
-    FadeTransition(opacity: animation,
-  
-    child:  Container(
+    Container(
                 child: Row(
                   children: [
                     Expanded(
                         
                       child: Align(
-                        alignment: data.messages[data.messages.length-index-1].isOwn?Alignment.centerRight:Alignment.centerLeft,
+                        alignment: messages[messages.length-index-1].isOwn?Alignment.centerRight:Alignment.centerLeft,
                           child: Container(
                                constraints: BoxConstraints(minWidth: size.width*0.15, maxWidth: size.width*0.8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(size.height/70),
-                            color: data.messages[data.messages.length-index-1].isOwn?Colors.green:Colors.blueGrey
+                            color: messages[messages.length-index-1].isOwn?Colors.green:Colors.blueGrey
                           ),
                           
                          
@@ -78,8 +114,8 @@ List<String>messages=new List<String>();
                                 children: [
                                 
                                 
-                                  TextSpan(text:"${data.messages[data.messages.length-index-1].messagebody}",style: TextStyle(color: Colors.white,fontSize: size.height/50),)
-                                  ,TextSpan(text: "    ${data.messages[data.messages.length-index-1].time}",style: TextStyle(color: Colors.white,fontSize: size.height/90,),)
+                                  TextSpan(text:"${messages[messages.length-index-1].messagebody}",style: TextStyle(color: Colors.white,fontSize: size.height/50),)
+                                  ,TextSpan(text: "    ${messages[messages.length-index-1].time}",style: TextStyle(color: Colors.white,fontSize: size.height/90,),)
                                 ]
                               ))
                               ),
@@ -88,7 +124,6 @@ List<String>messages=new List<String>();
                     ),
                   ],
                 ),
-              ),
-    );
+              );
   }
 }

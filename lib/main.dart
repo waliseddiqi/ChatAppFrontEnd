@@ -3,9 +3,13 @@ import 'package:chat_app/UI/chat_main.dart';
 import 'package:chat_app/UI/offline_page.dart';
 import 'package:chat_app/UI/signin_orsignup.dart';
 import 'package:chat_app/UI/signin_page.dart';
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/delay_page.dart';
-import 'package:chat_app/hive/chat_model.dart';
+//import 'package:chat_app/hive/chat_model.dart';
 import 'package:chat_app/models/authmodel.dart';
+import 'package:chat_app/models/local_chat.dart';
+import 'package:chat_app/models/local_message.dart';
+import 'package:chat_app/models/local_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,16 +23,12 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 
 void main() {
  
- 
+   //inithive();
   runApp(MyApp());
-  inithive();
+
 }
 
-void inithive()async{
-   var path=await path_provider.getApplicationDocumentsDirectory();
-  Hive..init(path.path)..registerAdapter(ChatModelHiveAdapter());
-   await Hive.openBox('testBox');
-}
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -84,14 +84,30 @@ SharedPreferences prefs=await SharedPreferences.getInstance();
 prefs.clear();
 }
 
+bool isboxOpen=false;
+void inithive()async{
+   var path=await path_provider.getApplicationDocumentsDirectory();
+  Hive..init(path.path)..registerAdapter(LocalChatAdapter());
+  Hive..init(path.path)..registerAdapter(LocalMessageAdapter());
+  Hive..init(path.path)..registerAdapter(LocalMessagesAdapter());
+
+   await Hive.openBox(chat_Box);
+   await Hive.openBox(messages_Box);
+   setState(() {
+     isboxOpen=true;
+   });
+}
+
 @override
   void initState() {
-     checkAuth();
+   // checkAuth();
+   inithive();
     delaypageduration();
     super.initState();
   
     
   }
+
   
   @override
   Widget build(BuildContext context) {
@@ -105,17 +121,14 @@ prefs.clear();
      }
       
    return connectionStatus == ConnectivityStatus.Offline?OfflinePage():
-     Scaffold(
+   !isboxOpen?DelayPage():  Scaffold(
      
       body:
       Container(
         width: size.width,
-            height: size.height,
-        child: AnimatedCrossFade(
-          crossFadeState:!_isdelayfinised?CrossFadeState.showFirst:CrossFadeState.showSecond,
-          duration: Duration(milliseconds: 700),
-          firstChild: DelayPage(),
-          secondChild:  Container(
+        height: size.height,
+        child: 
+          Container(
             width: size.width,
             height: size.height,
             child:   
@@ -123,7 +136,7 @@ prefs.clear();
                SignIn(pageController: pageController,mainContext: context,),
           ) ,
         ),
-      )
+      
     
     
  
