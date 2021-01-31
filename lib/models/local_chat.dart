@@ -7,8 +7,9 @@ class LocalChat{
   final String id;
   @HiveField(1)
   final String userName;
-
-  LocalChat({this.id, this.userName});
+  @HiveField(2)
+  final bool isread;
+  LocalChat( {this.id, this.userName,this.isread,});
 
 
 }

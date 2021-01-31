@@ -19,17 +19,20 @@ class LocalChatAdapter extends TypeAdapter<LocalChat> {
     return LocalChat(
       id: fields[0] as String,
       userName: fields[1] as String,
+      isread: fields[2] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, LocalChat obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.userName);
+      ..write(obj.userName)
+      ..writeByte(2)
+      ..write(obj.isread);
   }
 
   @override

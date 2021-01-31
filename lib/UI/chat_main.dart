@@ -64,7 +64,7 @@ var body=parsed['data'];
 print("message recieved");
 print(parsed['data']);
 var box =  Hive.box(chat_Box);
-LocalChat chat=new LocalChat(id: "${body['userid']}",userName: "${body['username']}");
+LocalChat chat=new LocalChat(id: "${body['userid']}",userName: "${body['username']}",);
 bool isChat=box.containsKey("${body['userid']}");
    setState(() {
     LocalMessage message=new LocalMessage();
@@ -142,65 +142,132 @@ void initState() {
         drawer: Drawer(
 
         ),
-        appBar: AppBar(
-          title: Text("Chats"),
-          
-        ),
+       
        body: Center(
-          child: Column(
-            children: [
-          
-              Container(
-                width: size.width,
-                height: size.height/1.22,
-                child: ValueListenableBuilder(
-                   valueListenable: Hive.box(chat_Box).listenable(),
-                     builder: (context, box, widget) {
-                     return 
-                     Container(
-                      height: size.height/1.3,
-                      width: size.width,
-                   child: box.keys.toList().length==0?
-                   Center(child: Text("Press + button to start chatting",style: TextStyle(fontSize: size.height/45),),):
-                    ListView.builder(
-                     itemCount: box.keys.toList().length,
-                     itemBuilder: (context, index) {
-                       final key=box.keys.toList()[index];
-                       final value=box.get(key)  as LocalChat;
+          child: Container(
+            width: size.width,
+            height: size.height,
+            child: Stack(
+              children: [
+                  Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                  height: size.height/5,
+                  width: size.width,
+                  child: Center(
+                    child: Container(
+                      margin: EdgeInsets.only(left: size.width/20),
+                      child: Row(
                         
-                       return GestureDetector(
-                         onTap: (){
-                           
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
-                                  =>ChatMessagePage(
-                                  username:value.userName,
-                                  id: value.id,
-                                  onlineStatus:"Online",
-                                  selfid: userSelfId,
-                                  selfname: selfUsername,
-                                  ))); 
-                                  //navigate to chatmessage page then in there save every single message inside message header and 
-                                  //load messages when navigation happens to that page with hive open box and key is users id that 
-                                  //that is unique ***/
-                             
-                                
-                         },
-                        child: Container(
-                          margin: EdgeInsets.all(size.height/80),
-                           padding: EdgeInsets.all(size.height/20),
-                           color: Colors.blueAccent,
-                           child: Text("${value.userName}",style: TextStyle(color: Colors.white,fontSize: size.height/40),),
-                         ),
-                       );
-                     },
-                    ));
+                        children: [
+                          Text("Chats",style: TextStyle(fontSize: size.height/35,color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                  color: Colors.blue,
+                  ///borderRadius: BorderRadius.only(bottomLeft: Radius.circular(300)),
+                  ),
+                ),
+                ),
+                Container(
+                    height: size.height/1.15,
+                    width: size.width,
+                    margin: EdgeInsets.only(top: size.height/7),
+                    decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(40)),
+                  ),
+                
+                  child: ValueListenableBuilder(
+                     valueListenable: Hive.box(chat_Box).listenable(),
+                       builder: (context, box, widget) {
+                       return 
+                       Container(
+                        height: size.height/1.5,
+                        width: size.width,
+                        margin: EdgeInsets.only(top: size.height/26),
+                     child: box.keys.toList().length==0?
+                    Center(child: Text("Press + button to start chatting",style: TextStyle(fontSize: size.height/45),),):
+                      ListView.builder(
+                        padding: EdgeInsets.zero,
+                       itemCount:box.keys.toList().length,
+                       itemBuilder: (context, index) {
+                      final key=box.keys.toList()[index];
+                       final value=box.get(key)  as LocalChat;
                           
-                   
+                         return
+
+                          Center(
+                            child: Column(
+                              children: [
+                               index==0?SizedBox(): Divider(
+                                  thickness: 1,
+                                  color: Colors.black,
+                                ),
+                                Container(
+                                  
+                                  height: size.height/10,
+                                  width: size.width/1.1,
+                                  child: ListTile(
+                                    leading: Icon(Icons.account_circle,size: size.height/15,),
+                                    title: Text("${value.userName}",style: TextStyle(fontSize: size.height/45),),
+                                    subtitle: Text("Last message"),
+                                    trailing: Text("time"),
+                                  ),
+                                 /* child: Row(
+                                    children: [
+                                      Container(
+                                        child: Icon(Icons.account_circle,size: size.height/15,),
+                                      )
+                                    ],
+                                  ),*/
+                                
+                                 
+                                ),
+                              ],
+                            ),
+                          );
+                         
+                         
+                          /*GestureDetector(
+                           onTap: (){
+                             
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
+                                    =>ChatMessagePage(
+                                    username:value.userName,
+                                    id: value.id,
+                                    onlineStatus:"Online",
+                                    selfid: userSelfId,
+                                    selfname: selfUsername,
+                                    ))); 
+                                    //navigate to chatmessage page then in there save every single message inside message header and 
+                                    //load messages when navigation happens to that page with hive open box and key is users id that 
+                                    //that is unique 
+                               
+                                  
+                           },
+                          child: Container(
+                            margin: EdgeInsets.all(size.height/80),
+                             padding: EdgeInsets.all(size.height/20),
+                             color: Colors.blueAccent,
+                             child: Text("${value.userName}",style: TextStyle(color: Colors.white,fontSize: size.height/40),),
+                           ),
+                         );*/
+                       },
+                      ));
+                            
+                     
 
 
-                     }),
-              )
-            ],
+                       }),
+                ),
+              
+               
+              ],
+            ),
           ),
        ),
   floatingActionButton: FloatingActionButton(
