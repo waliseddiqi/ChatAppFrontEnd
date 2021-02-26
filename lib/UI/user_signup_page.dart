@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:chat_app/UI/select_private.dart';
 import 'package:chat_app/core/enums.dart';
@@ -8,7 +9,7 @@ import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../api.dart';
 import 'chat_main.dart';
 import 'offline_page.dart';
@@ -27,9 +28,9 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
   String _gender="Female";
   String _password="";
   bool ismale=false;
-
+final picker = ImagePicker();
   bool isfemale=true;
-
+  File file;
   bool gender=true;
 
   SocketConnect socketConnect;
@@ -59,7 +60,115 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
     return false;
   }
 
-  void _validateAndSubmit() async {
+    Future getImage(ImageSource source,Size size) async {
+    final pickedFile = await picker.getImage(source: source);
+
+    setState(() {
+      if (pickedFile != null) {
+        file = File(pickedFile.path);
+       // showAcceptDialog(context,size);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+      void showDialog(BuildContext context,Size size){
+     showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeInOutBack.transform(a1.value) +   0.2;
+          return Material(
+            color: Colors.transparent,
+                      child: Transform(
+              transform: Matrix4.translationValues(0.0, curvedValue * size.height/3.687,0.0),
+              child: Opacity(
+                opacity: a1.value,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(size.height/30)
+                      ),
+                     
+                       height: size.height/3.7,
+                        width: size.width/1.1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.start,
+                         children: [
+                           Padding(
+                             padding: const EdgeInsets.all(8.0),
+                             child: Text("Profile Photo",style: TextStyle(fontWeight: FontWeight.w700,fontSize: size.height/52.67),),
+                           ),
+                         ],
+                       ),
+                        Container(
+                       
+                       
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                          Column(
+                            children: [
+                              IconButton(icon: Icon(Icons.photo), onPressed: (){
+                                getImage(ImageSource.gallery, size);
+                                  Navigator.pop(context);
+
+                              }),
+                              Text("Gallery")
+                            ],
+                          ),
+                            Column(
+                              children: [
+                                IconButton(icon: Icon(Icons.photo_camera), onPressed: (){
+                                     getImage(ImageSource.camera, size);
+                                       Navigator.pop(context);
+                                }),
+                                Text("Camera")
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.end,
+                         children: [
+                           Padding(
+                             padding: const EdgeInsets.all(8.0),
+                             child: new FlatButton(
+                                child: new Text('Okay',style: TextStyle(fontWeight: FontWeight.w700,fontSize: size.height/52.67)),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                           ),
+                         ],
+                       ),
+
+                        ],
+                      ),
+                    
+                     
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 350),
+        barrierDismissible: false,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation1, animation2) {});
+  }
+
+  Future _validateAndSubmit() async {
 
     if (_isValidForm()) {
         /* socketConnect=new SocketConnect();
@@ -67,27 +176,66 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
    
          print(user.gender);
       socketConnect.emitUserSignup(user.name,user.age);*/
-            user.age=_birthday;
-      api.signupUser(user.name, user.age).then((value)async{
-        if(value.statusCode==200){
-           var parsed=json.decode(value.body);
-          SharedPreferences prefs=await SharedPreferences.getInstance();
-          print(parsed);
-          prefs.setString("username", parsed["username"]);
-          prefs.setString("userid", parsed["userid"]);
+        user.age=_birthday;
+        SharedPreferences prefs=await SharedPreferences.getInstance();
+        String notificationid=prefs.getString("notificationId");
+        print(notificationid);
+        if(file!=null){
+          api.signupUser(user.name, user.age,file,notificationid).then((value)async{
+            if(value.statusCode==200){
+              var parsed=json.decode(value.body);
+            
+              print(parsed);
+              prefs.setString("username", parsed["username"]);
+              prefs.setString("userid", parsed["userid"]);
+           //auth signup
           //after general signup datas saved put userid in personal infos in database
-           api.signUp(email, _password,user.name,parsed["userid"]).then((value)async{
-        var parsed=json.decode(value.body);
-          SharedPreferences prefs=await SharedPreferences.getInstance();
-          prefs.setString("token", parsed["token"]);
+              api.signUp(email, _password,user.name,parsed["userid"],notificationid).then((value)async{
+              var parsed=json.decode(value.body);
+              print(parsed);
+              SharedPreferences prefs=await SharedPreferences.getInstance();
+              prefs.setString("token", parsed["token"]);
+       
        // print(parsed["token"]);
-      });
+          });
         }else{
-          print("couldnt create user");
+        print("couldnt create user");
         }
       });
+      
+      }
+      else{
+          SharedPreferences prefs=await SharedPreferences.getInstance();
+          String notificationid=prefs.getString("notificationId");
+          print(notificationid);
+          api.signupUserwithOutImage(user.name, user.age,notificationid).then((value)async{
+            if(value.statusCode==200){
+            var parsed=json.decode(value.body);
+       
+            print(parsed);
+            prefs.setString("username", parsed["username"]);
+            prefs.setString("userid", parsed["userid"]);
+          //auth signup
+          //after general signup datas saved put userid in personal infos in database
+            api.signUp(email, _password,user.name,parsed["userid"],notificationid).then((value)async{
+              var parsed=json.decode(value.body);
+              print(parsed);
+              SharedPreferences prefs=await SharedPreferences.getInstance();
+              prefs.setString("token", parsed["token"]);
+       
+       // print(parsed["token"]);
+      });
+          }else{
+       
+          print("couldnt create user");
+          }
+      });
+
+      }
      
-      }}
+      }
+      
+      }
   String _nameFieldValidator(String name){
     if(name==null||name==""){
       return "Please Enter your name";
@@ -132,30 +280,72 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
                 child: Column(
                
                   children: [
-          Container(
-                   
-            child: Text("Registeration",style:TextStyle(fontSize: size.height/25,fontWeight: FontWeight.w600)),),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+
+              Container(
+                       
+                child: Text("Registeration",style:TextStyle(fontSize: size.height/25,fontWeight: FontWeight.w600)),),
+                Column(
+                  children: [
+                    InkWell(
+                      splashColor: Colors.black,
+                      highlightColor: Colors.redAccent,
+                      borderRadius: BorderRadius.circular(100),
+                      onTap: (){
+                        //print("Add profile");
+                        showDialog(context, size);
+
+                      },
+                        child: Opacity(
+                        opacity: 0.7,
+                          child:file!=null?
+                           Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              image: DecorationImage(image:FileImage(file) ),
+                              borderRadius: BorderRadius.circular(100)
+                          ),
+                          width: 100,
+                          height: 100,
+                          child: Icon(Icons.account_circle,color: Colors.black,size: size.height/15,),
+                        ):
+                           Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                             
+                              borderRadius: BorderRadius.circular(100)
+                          ),
+                          width: 100,
+                          height: 100,
+                          child: Icon(Icons.account_circle,color: Colors.black,size: size.height/15,),
+                        ),
+                      ),
+                    ),
+                    Text("Tap to add Profile Photo",style: TextStyle(fontSize: size.height/70),)
+                  ],
+                )
+
+
+            ],
+          ),
                    
          
            Container(
-             height: size.height/7,
-              margin: EdgeInsets.only(left: size.width/55,top: size.height/20),
+            height: size.height/7,
+            margin: EdgeInsets.only(left: size.width/55,top: size.height/20),
             width: size.width/1.1,
             child: Column(
-               crossAxisAlignment: CrossAxisAlignment.start,
-             
-              children: [
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
                 Text("Username",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
                 SizedBox(height: size.height/110,),
                 TextFormField(
-                  onSaved: (name) =>user.name=name ,
-                  validator: _ageFieldValidator,
-                  style: TextStyle(fontSize: size.height/42),
-                  decoration: InputDecoration(hintText: "Username",
-                  
-                ),
-                
-                ),
+                onSaved: (name) =>user.name=name ,
+                validator: _ageFieldValidator,
+                style: TextStyle(fontSize: size.height/42),
+                decoration: InputDecoration(hintText: "Username",),),
               ],
             ),
           ),
@@ -263,10 +453,12 @@ class _UserSignUpPageState extends State<UserSignUpPage> {
           color: Colors.blueAccent,
           child: Text("Sign up",style:TextStyle(color: Colors.white) ,),
           onPressed: (){
-            _validateAndSubmit();
-         
+            _validateAndSubmit().then((value){
+              
           Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()));
-                
+     
+            });
+                    
                   }),
                 )
 

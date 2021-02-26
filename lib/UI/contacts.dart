@@ -92,45 +92,67 @@ setState(() {
   @override
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
-   return Scaffold(
-     appBar: AppBar(
-       title: Text("Contacts"),
-     ),
-      body: Center(
-        child: Container(
-          width: size.width,
-          height: size.height,
-          
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: users.length,
-            itemBuilder: (context,index){
-              return 
-              
-              users[index].userid==userid?SizedBox():Container(
-                child: GestureDetector(
-                  onTap: (){
-                   
-                                //to create chat inside chats 
-                               _createChat(users[index].username,users[index].userid);
-
-                  },
-                                child:
-                     Container(
-                       height: size.height/8,
-                    margin: EdgeInsets.only(top: size.height/35),
-                    child: ListTile(
-                      title: Text(users[index].username,style: TextStyle(fontWeight: FontWeight.w600),),
-                      tileColor: Colors.green,
-                     
-                      trailing: Text(users[index].onlineStatus?"Online":"Offline"),
+   return
+        Stack(
+          children: [
+                 Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                 height: size.height/5,
+                  width: size.width,
+                  child: Center(
+                    child: Container(
+                      margin: EdgeInsets.only(top: size.height/45),
+                      child: Center(child: Text("Contacts",style: TextStyle(fontSize: size.height/35,color: Colors.white))),
                     ),
                   ),
+                  decoration: BoxDecoration(
+                  color: Colors.green[400],
+                  ///borderRadius: BorderRadius.only(bottomLeft: Radius.circular(300)),
+                  ),
                 ),
-              );
-          })
-        ),
-      ),
-    );
+                ),
+            Container(
+               margin: EdgeInsets.only(top: size.height/20),
+               height: size.height/1.15,
+              width: size.width,
+               color: Colors.white,
+              child: ListView.builder(
+              
+                itemCount: users.length,
+                itemBuilder: (context,index){
+                  return 
+                  
+                  users[index].userid==userid?SizedBox():Container(
+                    child: GestureDetector(
+                      onTap: (){
+                       
+                                    //to create chat inside chats 
+                                   _createChat(users[index].username,users[index].userid);
+
+                      },
+                                    child:
+                         Center(
+                           child: Container(
+                              height: size.height/10,
+                              width: size.width/1.1,
+                        margin: EdgeInsets.only(top: size.height/35),
+                        child: ListTile(
+                            title: Text(users[index].username,style: TextStyle(fontWeight: FontWeight.w600),),
+                            tileColor: Colors.white,
+                           
+                            trailing: Text(users[index].onlineStatus?"Online":"Offline"),
+                        ),
+                      ),
+                         ),
+                    ),
+                  );
+              })
+            
+      
+    ),
+          ],
+        );
   }
 }

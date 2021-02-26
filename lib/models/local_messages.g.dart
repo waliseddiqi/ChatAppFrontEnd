@@ -17,9 +17,9 @@ class LocalMessagesAdapter extends TypeAdapter<LocalMessages> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return LocalMessages(
-     id:fields[0] as String,
-     userName:fields[1] as String,
-    messages:(fields[2] as List)?.cast<LocalMessage>(),
+      id: fields[0] as String,
+      userName: fields[1] as String,
+      messages: (fields[2] as List)?.cast<LocalMessage>(),
     );
   }
 

@@ -65,6 +65,9 @@ String _passwordFieldValidator(String name){
           prefs.setString("token", parsed["token"]);
           prefs.setString("username",parsed["searchres"][0]["username"]);
           prefs.setString("userid", parsed["searchres"][0]["userid"]);
+          print(parsed);
+          //prefs.setString("notificationId",parsed["seachres"][0]["notificationId"]);
+          ///notification id here
            _globalKey.currentState.showSnackBar(
              SnackBar(
                elevation: 10,

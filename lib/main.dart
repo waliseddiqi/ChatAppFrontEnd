@@ -10,7 +10,9 @@ import 'package:chat_app/models/authmodel.dart';
 import 'package:chat_app/models/local_chat.dart';
 import 'package:chat_app/models/local_message.dart';
 import 'package:chat_app/models/local_messages.dart';
+import 'package:chat_app/models/local_users.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal/onesignal.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'UI/email_confirmation.dart';
@@ -79,6 +81,27 @@ void delaypageduration(){
 });
 }
 
+  Future<String> getPlayerId() async {
+    var status = await OneSignal.shared.getPermissionSubscriptionState();
+    var playerId = status.subscriptionStatus.userId;
+    //print ("initUniqueIdentifierState >> playerId " + playerId );
+    return playerId;
+  } 
+
+
+void initSignal()async{
+  SharedPreferences prefs=await SharedPreferences.getInstance();
+  OneSignal.shared.init("6e2a85ef-dee5-42f4-945d-46e4e4c72463");
+OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+  // will be called whenever a notification is opened/button pressed.
+});
+
+getPlayerId().then((value){
+prefs.setString("notificationId", value);
+print(value);
+});
+}
+
 void checkAuth()async{
 SharedPreferences prefs=await SharedPreferences.getInstance();
 prefs.clear();
@@ -104,11 +127,19 @@ void inithive()async{
    inithive();
     delaypageduration();
     super.initState();
-  
+    initSignal();
     
   }
+//localUserStorage
+ /* void saveNotificationId(String notificationId){
+    LocalUsers localUsers=new LocalUsers();
+    localUsers.notificationId=notificationId;
+    localUsers.userId="";
+    localUsers.userName="";
+    var box =  Hive.box(localUserStorage);
+    box.put("user",localUsers);
+  }*/
 
-  
   @override
   Widget build(BuildContext context) {
      Size size=MediaQuery.of(context).size;
