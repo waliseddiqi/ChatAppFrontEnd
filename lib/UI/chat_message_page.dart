@@ -169,113 +169,143 @@ TextEditingController messageText=new TextEditingController();
         child: Scaffold(
       
        backgroundColor: ColorsPallete.colorc,
-       body: Center(
+       body: SingleChildScrollView(
+                child: Center(
 
-         child: Container(
-           child: Column(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               Container(
-                 width: size.width,
-                 height: size.height/8,
-                 color: ColorsPallete.colora,
-                 child:Row(
-                   crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
+           child: Container(
+             child: Stack(
+               
+               children: [
                      Container(
-                       width: 55,
-                       height: 55,
-                       margin: EdgeInsets.all(size.height/50),
-                       color: Colors.greenAccent,
-                      child: Center(child: Text("${widget.username[0]}",style: TextStyle(
-                        fontSize: size.height/35)),
-                     )),
+                   width: size.width,
+                   height: size.height/4,
+                   color: ColorsPallete.colora,
+                   child:Row(
+
+                   mainAxisAlignment: MainAxisAlignment.start,
+                  
+                     children: [
+                      IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
+                       _savemessages(widget.username, widget.id, messages);
+                      }),
                      Container(
-                       margin: EdgeInsets.only(top:size.height/24,left: size.width/15),
+                       margin: EdgeInsets.only(left: size.width/3),
+                       height: size.height/6,
                        child: Column(
+                        
                          children: [
-                           Text("${widget.username}",style: TextStyle(
-                             fontSize: size.height/45,fontWeight: FontWeight.w500,color: Colors.white),),
-                           Text("${widget.onlineStatus}",style: TextStyle(fontSize: size.height/55,color: Colors.white))
+                           Container(
+                             width: 55,
+                             height: 55,
+                             decoration: BoxDecoration(
+                               color: Colors.white,
+                               borderRadius: BorderRadius.circular(40)
+                             ),
+                             child: Center(child: Text("${widget.username[0]}",style:TextStyle(fontSize: size.height/30))),
+                           ),
+                         
+
+                         ],
+                       ),
+
+                     ),  Text("${widget.username}",style:TextStyle(color: Colors.white,fontSize: size.height/45) ,)
+                     ],
+                   )
+                 ),
+                 Column(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                 
+                       ClipRRect(
+                        
+                            child: Container(
+                            decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(40)),
+                                boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                             margin: EdgeInsets.only(top: size.height/7),
+                             height: size.height*0.73,
+                             
+                             child:
+                          
+                             MessagesField(animatedListKey: animatedListKey,id: widget.id,username: widget.username,messages: messages,)
+                            
+                           ),
+                       ),
+                     Container(
+                       color: ColorsPallete.colora,
+                       width: size.width,
+                       height: size.height/7.9,
+                       child: Row(
+                         children: [
+                           Container(
+                             margin: EdgeInsets.all(size.height/50),
+                             child: Icon(Icons.attach_file)),
+                             Container(
+                             margin: EdgeInsets.all(size.height/250),
+                             child: Icon(Icons.tag_faces)),
+                             Container(
+                               decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)
+                                ),
+                               ),
+                               width: size.width/1.7,
+                               height: size.height/9,
+                                  margin: EdgeInsets.all(size.height/70),
+                               child: Center(
+                                 child: TextFormField(
+                                   controller:messageText ,
+                                   style: TextStyle(fontSize: size.height/40,color: Colors.white),
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none
+                                    ),
+                                 ),
+                               ),
+                             ),
+                             Container(
+                            
+                             child: IconButton(icon: Icon(Icons.send),onPressed: (){
+                              // onconnected();
+                              sendMessage(messageText.text.toString());
+                            
+                               if(messageText.text!=""){
+                                 setState(() {
+                                   LocalMessage message=new LocalMessage();
+                                  message.isOwn=true;
+                                  message.messagebody=messageText.text.toString();
+                                  message.sender="You";
+                                  message.time= DateTime.now().toString();
+                                  message.isPhoto=false;
+                                  messages.add(message);
+                                  //  animatedListKey.currentState.insertItem(messages.length-1,duration: Duration(milliseconds: 180));
+                             
+                                 });
+                                  
+                            
+                             // sendMessage(widget.id, messageText.text.toString());
+                                   messageText.clear();
+                                   }}),)
+                             //  controller.clear();
+                            
                          ],
                        ),
                      )
                    ],
-                 )
-               ),
-                 Container(
-                    color: Colors.white,
-                     height: size.height*0.75,
-                     
-                     child:
-                  
-                     MessagesField(animatedListKey: animatedListKey,id: widget.id,username: widget.username,messages: messages,)
-                    
-                   ),
-               Container(
-                 color: ColorsPallete.colora,
-                 width: size.width,
-                 height: size.height/8,
-                 child: Row(
-                   children: [
-                     Container(
-                       margin: EdgeInsets.all(size.height/50),
-                       child: Icon(Icons.attach_file)),
-                       Container(
-                       margin: EdgeInsets.all(size.height/250),
-                       child: Icon(Icons.tag_faces)),
-                       Container(
-                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)
-                          ),
-                         ),
-                         width: size.width/1.7,
-                         height: size.height/9,
-                            margin: EdgeInsets.all(size.height/70),
-                         child: Center(
-                           child: TextFormField(
-                             controller:messageText ,
-                             style: TextStyle(fontSize: size.height/40,color: Colors.white),
-                              decoration: InputDecoration(
-                                border: InputBorder.none
-                              ),
-                           ),
-                         ),
-                       ),
-                       Container(
-                      
-                       child: IconButton(icon: Icon(Icons.send),onPressed: (){
-                        // onconnected();
-                        sendMessage(messageText.text.toString());
-                      
-                         if(messageText.text!=""){
-                           setState(() {
-                             LocalMessage message=new LocalMessage();
-                            message.isOwn=true;
-                            message.messagebody=messageText.text.toString();
-                            message.sender="You";
-                            message.time= DateTime.now().toString();
-                            message.isPhoto=false;
-                            messages.add(message);
-                            //  animatedListKey.currentState.insertItem(messages.length-1,duration: Duration(milliseconds: 180));
-                       
-                           });
-                            
-                      
-                       // sendMessage(widget.id, messageText.text.toString());
-                             messageText.clear();
-                             }}),)
-                       //  controller.clear();
-                      
-                   ],
+          
                  ),
-               )
-             ],
-        
+               ],
+             ),
            ),
          ),
        ),
