@@ -32,7 +32,6 @@ dependencies:
   socket_io_client: ^0.9.11
   shared_preferences: ^0.5.12
   http: ^0.12.2
-  get_it: ^5.0.6
   connectivity: ^2.0.0
   hive: ^1.4.4+1
   path_provider: ^1.6.24

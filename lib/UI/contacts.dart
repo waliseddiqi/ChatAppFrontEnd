@@ -140,7 +140,7 @@ setState(() {
                         margin: EdgeInsets.only(top: size.height/35),
                         child: ListTile(
                             title: Text(users[index].username,style: TextStyle(fontWeight: FontWeight.w600),),
-                            //tileColor: Colors.white,
+                            tileColor: Colors.white,
                            
                             trailing: Text(users[index].onlineStatus?"Online":"Offline"),
                         ),

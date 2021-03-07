@@ -7,13 +7,11 @@ import 'package:chat_app/constants.dart';
 import 'package:chat_app/delay_page.dart';
 //import 'package:chat_app/hive/chat_model.dart';
 import 'package:chat_app/models/authmodel.dart';
-import 'package:chat_app/models/current_state.dart';
 import 'package:chat_app/models/local_chat.dart';
 import 'package:chat_app/models/local_message.dart';
 import 'package:chat_app/models/local_messages.dart';
 import 'package:chat_app/models/local_users.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:onesignal/onesignal.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,10 +23,9 @@ import 'core/enums.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
- 
 void main() {
-
- // setUpLocator();
+ 
+   //inithive();
   runApp(MyApp());
 
 }
@@ -92,7 +89,6 @@ void delaypageduration(){
   } 
 
 
-
 void initSignal()async{
   SharedPreferences prefs=await SharedPreferences.getInstance();
   OneSignal.shared.init("6e2a85ef-dee5-42f4-945d-46e4e4c72463");
@@ -132,7 +128,7 @@ void inithive()async{
     delaypageduration();
     super.initState();
     initSignal();
-   /// initgetit();
+    
   }
 //localUserStorage
  /* void saveNotificationId(String notificationId){

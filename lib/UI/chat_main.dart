@@ -176,126 +176,117 @@ void initState() {
                   
                   controller: tabController,
                   children: [
-                      ClipRRect(
-                    child: Container(
+                      Container(
                     height: size.height/1.15,
                     width: size.width,
                     margin: EdgeInsets.only(top: size.height/20),
                     decoration: BoxDecoration(
                     color: Colors.white,
-                           boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(0.0, 1.0), //(x,y)
-                                blurRadius: 6.0,
-                              ),
-                            ],
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(40)),
                   ),
                 
                   child: ValueListenableBuilder(
                      valueListenable: Hive.box(chat_Box).listenable(),
-                         builder: (context, box, widget) {
-                         return 
-                         Container(
-                          height: size.height/1.5,
-                          width: size.width,
-                          margin: EdgeInsets.only(top: size.height/26),
+                       builder: (context, box, widget) {
+                       return 
+                       Container(
+                        height: size.height/1.5,
+                        width: size.width,
+                        margin: EdgeInsets.only(top: size.height/26),
                      child: box.keys.toList().length==0?
                      // Center(child: Text("Press + button to start chatting",style: TextStyle(fontSize: size.height/45),),)
                     Center(child: Text("No Chats",style: TextStyle(fontSize: size.height/45),),):
-                        ListView.builder(
-                          padding: EdgeInsets.zero,
-                         itemCount:box.keys.toList().length,
-                         itemBuilder: (context, index) {
-                        final key=box.keys.toList()[index];
-                         final value=box.get(key)  as LocalChat;
-                            
-                           return
+                      ListView.builder(
+                        padding: EdgeInsets.zero,
+                       itemCount:box.keys.toList().length,
+                       itemBuilder: (context, index) {
+                      final key=box.keys.toList()[index];
+                       final value=box.get(key)  as LocalChat;
+                          
+                         return
 
-                            Center(
-                              child: Column(
-                                children: [
-                                 index==0?SizedBox(): Divider(
-                                    thickness: 1,
-                                    color: Colors.black,
-                                  ),
-                                  InkWell(
-                                      onTap: (){
+                          Center(
+                            child: Column(
+                              children: [
+                               index==0?SizedBox(): Divider(
+                                  thickness: 1,
+                                  color: Colors.black,
+                                ),
+                                InkWell(
+                                    onTap: (){
+                             
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
+                                    =>ChatMessagePage(
+                                    username:value.userName,
+                                    id: value.id,
+                                    onlineStatus:"Online",
+                                    selfid: userSelfId,
+                                    selfname: selfUsername,
+                                    ))); 
+                                    //navigate to chatmessage page then in there save every single message inside message header and 
+                                    //load messages when navigation happens to that page with hive open box and key is users id that 
+                                    //that is unique 
                                
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
-                                      =>ChatMessagePage(
-                                      username:value.userName,
-                                      id: value.id,
-                                      onlineStatus:"Online",
-                                      selfid: userSelfId,
-                                      selfname: selfUsername,
-                                      ))); 
-                                      //navigate to chatmessage page then in there save every single message inside message header and 
-                                      //load messages when navigation happens to that page with hive open box and key is users id that 
-                                      //that is unique 
-                                 
+                                  
+                           },
+                                 child: Container(
                                     
-                             },
-                                   child: Container(
-                                      
-                                      height: size.height/10,
-                                      width: size.width/1.1,
-                                      child: ListTile(
-                                        leading: Icon(Icons.account_circle,size: size.height/15,),
-                                        title: Text("${value.userName}",style: TextStyle(fontSize: size.height/45),),
-                                        subtitle: Text("Last message"),
-                                        trailing: Text("time"),
-                                      ),
-                                     /* child: Row(
-                                        children: [
-                                          Container(
-                                            child: Icon(Icons.account_circle,size: size.height/15,),
-                                          )
-                                        ],
-                                      ),*/
-                                    
-                                     
+                                    height: size.height/10,
+                                    width: size.width/1.1,
+                                    child: ListTile(
+                                      leading: Icon(Icons.account_circle,size: size.height/15,),
+                                      title: Text("${value.userName}",style: TextStyle(fontSize: size.height/45),),
+                                      subtitle: Text("Last message"),
+                                      trailing: Text("time"),
                                     ),
+                                   /* child: Row(
+                                      children: [
+                                        Container(
+                                          child: Icon(Icons.account_circle,size: size.height/15,),
+                                        )
+                                      ],
+                                    ),*/
+                                  
+                                   
                                   ),
-                                ],
-                              ),
-                            );
-                           
-                           
-                            /*GestureDetector(
-                             onTap: (){
+                                ),
+                              ],
+                            ),
+                          );
+                         
+                         
+                          /*GestureDetector(
+                           onTap: (){
+                             
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
+                                    =>ChatMessagePage(
+                                    username:value.userName,
+                                    id: value.id,
+                                    onlineStatus:"Online",
+                                    selfid: userSelfId,
+                                    selfname: selfUsername,
+                                    ))); 
+                                    //navigate to chatmessage page then in there save every single message inside message header and 
+                                    //load messages when navigation happens to that page with hive open box and key is users id that 
+                                    //that is unique 
                                
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)
-                                      =>ChatMessagePage(
-                                      username:value.userName,
-                                      id: value.id,
-                                      onlineStatus:"Online",
-                                      selfid: userSelfId,
-                                      selfname: selfUsername,
-                                      ))); 
-                                      //navigate to chatmessage page then in there save every single message inside message header and 
-                                      //load messages when navigation happens to that page with hive open box and key is users id that 
-                                      //that is unique 
-                                 
-                                    
-                             },
-                            child: Container(
-                              margin: EdgeInsets.all(size.height/80),
-                               padding: EdgeInsets.all(size.height/20),
-                               color: Colors.blueAccent,
-                               child: Text("${value.userName}",style: TextStyle(color: Colors.white,fontSize: size.height/40),),
-                             ),
-                           );*/
-                         },
-                        ));
-                              
+                                  
+                           },
+                          child: Container(
+                            margin: EdgeInsets.all(size.height/80),
+                             padding: EdgeInsets.all(size.height/20),
+                             color: Colors.blueAccent,
+                             child: Text("${value.userName}",style: TextStyle(color: Colors.white,fontSize: size.height/40),),
+                           ),
+                         );*/
+                       },
+                      ));
+                            
                      
 
 
-                         }),
-                ),
-                      ),Contacts(),ProfileAndSettings(userid: userSelfId,username: selfUsername,)
+                       }),
+                ),Contacts(),ProfileAndSettings(userid: userSelfId,username: selfUsername,)
                   ]),
               
                  Column(
