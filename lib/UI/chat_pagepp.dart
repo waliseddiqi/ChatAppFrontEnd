@@ -30,13 +30,13 @@ Widget build(BuildContext context) {
           child: Container(
             child: Column(
               children: [
-                RaisedButton(
+                RaisedButton (
                   child: Text("Private chat"),
                   onPressed: (){
                     Navigator.pop(context);
                    
                 }),
-                  RaisedButton(
+                  RaisedButton (
                   child: Text("Log out"),
                   onPressed: (){
                   //  Navigator.push(context, MaterialPageRoute(builder: (context)=>Signin()));

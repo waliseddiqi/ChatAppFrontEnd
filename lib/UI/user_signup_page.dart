@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:chat_app/UI/select_private.dart';
 import 'package:chat_app/core/enums.dart';
+import 'package:chat_app/models/signup_model.dart';
 import 'package:chat_app/models/user.dart';
 import 'package:chat_app/viewModels/socketConnet.dart';
 import 'package:flutter/material.dart';
@@ -168,7 +169,32 @@ final picker = ImagePicker();
         pageBuilder: (context, animation1, animation2) {});
   }
 
-  Future _validateAndSubmit() async {
+  void validateAndSubmit(BuildContext context)async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+      String notificationid=prefs.getString("notificationId");
+    SignUpModel signUpModel = Provider.of<SignUpModel>(context,listen: false);
+    user.age=_birthday;
+    signUpModel.age= user.age;
+    signUpModel.email = email;
+    signUpModel.name = user.name;
+    signUpModel.notificationId = notificationid;
+    signUpModel.password = _password ;
+    signUpModel.file = file;
+    
+
+     if (_isValidForm()) {
+       try {
+         await  signUpModel.validateAndSubmit();
+         Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()));
+       } catch (e) {
+         print(e);
+       }
+     
+        
+     }
+  }
+
+  /*Future _validateAndSubmit() async {
 
     if (_isValidForm()) {
         /* socketConnect=new SocketConnect();
@@ -235,7 +261,7 @@ final picker = ImagePicker();
      
       }
       
-      }
+      }*/
   String _nameFieldValidator(String name){
     if(name==null||name==""){
       return "Please Enter your name";
@@ -267,212 +293,214 @@ final picker = ImagePicker();
     Size size=MediaQuery.of(context).size;
     var connectionStatus = Provider.of<ConnectivityStatus>(widget.mainContext);
    return connectionStatus == ConnectivityStatus.Offline?OfflinePage():
-     Scaffold(
-      body: SingleChildScrollView(
-              child: Center(
-          child: Container(
-              child: Form(
-                key: _formKey,
-                child: 
-              Container(
-             
-                margin: EdgeInsets.only(top: size.height/15),
-                child: Column(
-               
-                  children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-
-              Container(
-                       
-                child: Text("Registeration",style:TextStyle(fontSize: size.height/25,fontWeight: FontWeight.w600)),),
-                Column(
-                  children: [
-                    InkWell(
-                      splashColor: Colors.black,
-                      highlightColor: Colors.redAccent,
-                      borderRadius: BorderRadius.circular(100),
-                      onTap: (){
-                        //print("Add profile");
-                        showDialog(context, size);
-
-                      },
-                        child: Opacity(
-                        opacity: 0.7,
-                          child:file!=null?
-                           Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              image: DecorationImage(image:FileImage(file) ),
-                              borderRadius: BorderRadius.circular(100)
-                          ),
-                          width: 100,
-                          height: 100,
-                          child: Icon(Icons.account_circle,color: Colors.black,size: size.height/15,),
-                        ):
-                           Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                             
-                              borderRadius: BorderRadius.circular(100)
-                          ),
-                          width: 100,
-                          height: 100,
-                          child: Icon(Icons.account_circle,color: Colors.black,size: size.height/15,),
-                        ),
-                      ),
-                    ),
-                    Text("Tap to add Profile Photo",style: TextStyle(fontSize: size.height/70),)
-                  ],
-                )
-
-
-            ],
-          ),
-                   
-         
-           Container(
-            height: size.height/7,
-            margin: EdgeInsets.only(left: size.width/55,top: size.height/20),
-            width: size.width/1.1,
-            child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-                Text("Username",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
-                SizedBox(height: size.height/110,),
-                TextFormField(
-                onSaved: (name) =>user.name=name ,
-                validator: _ageFieldValidator,
-                style: TextStyle(fontSize: size.height/42),
-                decoration: InputDecoration(hintText: "Username",),),
-              ],
-            ),
-          ),
-           Container(
-          
-          
-           margin: EdgeInsets.only(left: size.width/20),
-            child: Row(
-          
-              children: [
+     ChangeNotifierProvider(
+       create: (context)=>SignUpModel(),
+        child: Scaffold(
+        body: SingleChildScrollView(
+                child: Center(
+            child: Container(
+                child: Form(
+                  key: _formKey,
+                  child: 
                 Container(
+               
+                  margin: EdgeInsets.only(top: size.height/15),
                   child: Column(
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 
                     children: [
-                       Text("Date of Birthday",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
-                      Container(
-                        
-                        child: Container(
-                          width: size.width/2,
-                           margin: EdgeInsets.only(top: size.height/30),
-                          child: Text("$_birthday",style: TextStyle(fontSize: size.height/42),)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+
+                Container(
+                         
+                  child: Text("Registeration",style:TextStyle(fontSize: size.height/25,fontWeight: FontWeight.w600)),),
+                  Column(
+                    children: [
+                      InkWell(
+                        splashColor: Colors.black,
+                        highlightColor: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(100),
+                        onTap: (){
+                          //print("Add profile");
+                          showDialog(context, size);
+
+                        },
+                          child: Opacity(
+                          opacity: 0.7,
+                            child:file!=null?
+                             Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey[400],
+                                image: DecorationImage(image:FileImage(file) ),
+                                borderRadius: BorderRadius.circular(100)
+                            ),
+                            width: 100,
+                            height: 100,
+                            child: Icon(Icons.account_circle,color: Colors.black,size: size.height/15,),
+                          ):
+                             Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey[400],
+                               
+                                borderRadius: BorderRadius.circular(100)
+                            ),
+                            width: 100,
+                            height: 100,
+                            child: Icon(Icons.account_circle,color: Colors.black,size: size.height/15,),
+                          ),
                         ),
                       ),
+                      Text("Tap to add Profile Photo",style: TextStyle(fontSize: size.height/70),)
                     ],
-                  ),
-                ),
-                 Container(
-                  margin: EdgeInsets.only(left: size.width/27,top: size.height/30),
-                  width: size.height/5,
-                  height: size.height/18,
-                  child: MaterialButton(
-                  color: Colors.blueAccent,
-                  child: Text("Select Date",style:TextStyle(color: Colors.white) ,),
-                  onPressed: (){
-                  _showDatepicker().then((data){
-                    setState(() {
-                      _birthdaydate=data;
-                      _birthday="${_birthdaydate.year}-${_birthdaydate.month}-${_birthdaydate.day}";
-                    
-                    });
-                  }
-                  
-                  );
-                  
-                  }),
-                        )
-              ],
-            )
-          ),
-           Container(
-             height: size.height/7,
-            margin: EdgeInsets.only(left: size.width/55,top: size.height/15),
-            width: size.width/1.1,
-            child: Column(
-             
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                 Text("Password",style:TextStyle(fontSize: size.height/42,fontWeight: FontWeight.w600)),
-                SizedBox(height: size.height/110,),
-                TextFormField(
-                 
-                  obscureText: true,
-                  onSaved: (pass)=>_password=pass,
-                  validator: _passswordValidator,
-                  decoration: InputDecoration(
-                
-               
-                ),
-                
-                ),
+                  )
+
+
               ],
             ),
-          ),
-           Container(
-             height: size.height/7,
-            margin: EdgeInsets.only(left: size.width/55),
-            width: size.width/1.1,
-            child: Column(
-             
+                     
+           
+             Container(
+              height: size.height/7,
+              margin: EdgeInsets.only(left: size.width/55,top: size.height/20),
+              width: size.width/1.1,
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Text("Confirm Password",style:TextStyle(fontSize: size.height/42,fontWeight: FontWeight.w600)),
-                SizedBox(height: size.height/110,),
-                TextFormField(
-                 
-                  obscureText: true,
-                 // onSaved: ( name)=>user.name=name,
-                  validator: _passswordValidator,
-                  decoration: InputDecoration(
-                
-               
-                ),
-                
-                ),
-              ],
-            ),
-          ),
-            Container(
-                   margin: EdgeInsets.only(top: size.height/12),
-                  width: size.height/4,
-                  height: size.height/15,
-                  child: MaterialButton(
-          
-          color: Colors.blueAccent,
-          child: Text("Sign up",style:TextStyle(color: Colors.white) ,),
-          onPressed: (){
-            _validateAndSubmit().then((value){
-              
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatMain()));
-     
-            });
-                    
-                  }),
-                )
-
-
-
-
-
-                  ],
-                ),
-              )
+                  Text("Username",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
+                  SizedBox(height: size.height/110,),
+                  TextFormField(
+                  onSaved: (name) =>user.name=name ,
+                  validator: _ageFieldValidator,
+                  style: TextStyle(fontSize: size.height/42),
+                  decoration: InputDecoration(hintText: "Username",),),
+                ],
               ),
             ),
+             Container(
+            
+            
+             margin: EdgeInsets.only(left: size.width/20),
+              child: Row(
+            
+                children: [
+                  Container(
+                    child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                         Text("Date of Birthday",style:TextStyle(fontSize: size.height/50,fontWeight: FontWeight.w600)),
+                        Container(
+                          
+                          child: Container(
+                            width: size.width/2,
+                             margin: EdgeInsets.only(top: size.height/30),
+                            child: Text("$_birthday",style: TextStyle(fontSize: size.height/42),)
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                   Container(
+                    margin: EdgeInsets.only(left: size.width/27,top: size.height/30),
+                    width: size.height/5,
+                    height: size.height/18,
+                    child: MaterialButton(
+                    color: Colors.blueAccent,
+                    child: Text("Select Date",style:TextStyle(color: Colors.white) ,),
+                    onPressed: (){
+                    _showDatepicker().then((data){
+                      setState(() {
+                        _birthdaydate=data;
+                        _birthday="${_birthdaydate.year}-${_birthdaydate.month}-${_birthdaydate.day}";
+                      
+                      });
+                    }
+                    
+                    );
+                    
+                    }),
+                          )
+                ],
+              )
+            ),
+             Container(
+               height: size.height/7,
+              margin: EdgeInsets.only(left: size.width/55,top: size.height/15),
+              width: size.width/1.1,
+              child: Column(
+               
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   Text("Password",style:TextStyle(fontSize: size.height/42,fontWeight: FontWeight.w600)),
+                  SizedBox(height: size.height/110,),
+                  TextFormField(
+                   
+                    obscureText: true,
+                    onSaved: (pass)=>_password=pass,
+                    validator: _passswordValidator,
+                    decoration: InputDecoration(
+                  
+                 
+                  ),
+                  
+                  ),
+                ],
+              ),
+            ),
+             Container(
+               height: size.height/7,
+              margin: EdgeInsets.only(left: size.width/55),
+              width: size.width/1.1,
+              child: Column(
+               
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   Text("Confirm Password",style:TextStyle(fontSize: size.height/42,fontWeight: FontWeight.w600)),
+                  SizedBox(height: size.height/110,),
+                  TextFormField(
+                   
+                    obscureText: true,
+                   // onSaved: ( name)=>user.name=name,
+                    validator: _passswordValidator,
+                    decoration: InputDecoration(
+                  
+                 
+                  ),
+                  
+                  ),
+                ],
+              ),
+            ),
+              Container(
+                     margin: EdgeInsets.only(top: size.height/12),
+                    width: size.height/4,
+                    height: size.height/15,
+                    child: MaterialButton(
+            
+            color: Colors.blueAccent,
+            child: Text("Sign up",style:TextStyle(color: Colors.white) ,),
+            onPressed: (){
+            
+                
+              validateAndSubmit(context);       
+             
+                      
+                    }),
+                  )
+
+
+
+
+
+                    ],
+                  ),
+                )
+                ),
+              ),
+          ),
         ),
-      ),
-    );
+    ),
+     );
   }
   }
